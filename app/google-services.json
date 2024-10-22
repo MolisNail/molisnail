@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "931615455074",
+    "project_id": "molisnail-2024",
+    "storage_bucket": "molisnail-2024.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:931615455074:android:6874e05ab3f5fe56689e3b",
+        "android_client_info": {
+          "package_name": "com.espparki.molisnail"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "931615455074-0snforvo4o55on9f22iadbqune8u4jlv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.espparki.molisnail",
+            "certificate_hash": "0101010101010101010101010101010101010101"
+          }
+        },
+        {
+          "client_id": "931615455074-a41fekve9qahbfueh513uad9s0ih7vrn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDAUq3GWMGWwZbt9SDjjlGR462-BOoQ1EA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "931615455074-a41fekve9qahbfueh513uad9s0ih7vrn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,28 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/nav_catalogo"
+        android:icon="@drawable/ic_catalog"
+        android:title="Catálogo" />
+
+    <item
+        android:id="@+id/nav_citas"
+        android:icon="@drawable/ic_calendar"
+        android:title="Citas" />
+
+    <item
+        android:id="@+id/nav_home"
+        android:icon="@drawable/ic_home"
+        android:title="Home" />
+
+    <item
+        android:id="@+id/nav_tienda"
+        android:icon="@drawable/ic_store"
+        android:title="Tienda" />
+
+    <item
+        android:id="@+id/nav_perfil"
+        android:icon="@drawable/ic_profile"
+        android:title="Perfil" />
+
+</menu>
