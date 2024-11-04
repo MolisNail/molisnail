@@ -39,7 +39,6 @@
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:textColor="#1e1e1e"/>
-
         </LinearLayout>
     </LinearLayout>
 
@@ -56,46 +55,66 @@
         android:textSize="18sp"
         android:textColor="#1e1e1e"/>
 
-    <TextView
-        android:id="@+id/levelTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text=""
-        app:layout_constraintTop_toBottomOf="@id/emailTextView"
-        android:padding="16dp"
-        android:textSize="18sp"
-        app:layout_constraintStart_toStartOf="parent"
-        android:textColor="#1e1e1e"/>
-
-    <TextView
-        android:id="@+id/pointsTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text=""
-        android:padding="16dp"
-        android:textSize="18sp"
-        app:layout_constraintTop_toBottomOf="@id/levelTextView"
-        app:layout_constraintStart_toStartOf="parent"
-        android:textColor="#1e1e1e"/>
-
-    <!-- Barra de progreso -->
-    <ProgressBar
-        android:id="@+id/progressBar"
+    <!-- Contenedor del Nivel y la Barra de Progreso en el centro de la pantalla -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/level_card"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/pointsTextView"
+        android:layout_margin="16dp"
+        android:padding="16dp"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="4dp"
+        app:layout_constraintTop_toBottomOf="@id/emailTextView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp"
-        android:max="100"
-        style="?android:attr/progressBarStyleHorizontal"/>
+        app:layout_constraintBottom_toTopOf="@id/profile_options_recycler">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
+
+            <!-- Texto del Nivel -->
+            <TextView
+                android:id="@+id/levelTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Nivel: Bronze"
+                android:padding="8dp"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="#1e1e1e"/>
+
+            <!-- Texto de los Puntos -->
+            <TextView
+                android:id="@+id/pointsTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Puntos: 0"
+                android:padding="8dp"
+                android:textSize="16sp"
+                android:textColor="#1e1e1e"/>
+
+            <!-- Barra de Progreso -->
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:max="100"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:progressTint="@color/holo_green_light"
+                android:layout_marginTop="8dp"/>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
 
     <!-- Opciones del perfil (RecyclerView) -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/profile_options_recycler"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/progressBar"
-        android:padding="16dp"
-        android:textColor="#1e1e1e"/>
+        app:layout_constraintTop_toBottomOf="@id/level_card"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:padding="16dp"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

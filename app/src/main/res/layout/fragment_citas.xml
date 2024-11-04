@@ -1,19 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/light_background_main">
+    android:padding="16dp">
 
+    <!-- Título "Mis citas" -->
     <TextView
+        android:id="@+id/tvMisCitas"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Fragmento de Citas"
+        android:text="Mis citas"
         android:textSize="20sp"
-        android:textColor="@android:color/black"
+        android:textStyle="bold"
+        android:textColor="@color/dark_background_main"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"/>
 
+    <!-- Mensaje de próxima cita o "No tienes citas actualmente" -->
+    <TextView
+        android:id="@+id/tvProximaCita"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textColor="@color/dark_background_main"
+        android:text="Próxima cita: Lunes, 10 de Noviembre a las 10:00"
+        app:layout_constraintTop_toBottomOf="@id/tvMisCitas"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <!-- Línea separadora -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/less_dark_background_main"
+        app:layout_constraintTop_toBottomOf="@id/tvProximaCita"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="16dp"/>
+
+    <!-- Calendario para mostrar las citas del mes -->
+    <CalendarView
+        android:id="@+id/calendarView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/tvProximaCita"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- Botón para pedir citas -->
+    <Button
+        android:id="@+id/btnPedirCita"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Pedir cita"
+        app:layout_constraintTop_toBottomOf="@id/calendarView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

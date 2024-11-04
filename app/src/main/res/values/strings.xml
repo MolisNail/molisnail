@@ -3,4 +3,10 @@
     <string name="desarrollado">"Desarrollado por: "</string>
     <string name="developer">Francisco Javier Gómez Ruiz</string>
     <string name="default_web_client_id">931615455074-a41fekve9qahbfueh513uad9s0ih7vrn.apps.googleusercontent.com</string>
+    <string-array name="services_array">
+        <item>Manicura</item>
+        <item>Pedicura</item>
+        <item>Uñas acrílicas</item>
+        <item>Decoración</item>
+    </string-array>
 </resources>

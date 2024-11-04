@@ -93,9 +93,11 @@
         android:background="@color/dark_background_main"
         app:itemIconTint="@color/light_background_main"
         app:itemTextColor="@color/light_background_main"
+        app:itemBackground="@drawable/custom_ripple"
         app:menu="@menu/bottom_nav_menu"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -5,15 +5,16 @@
     android:layout_height="match_parent"
     android:background="@color/light_background_main">
 
-    <TextView
+
+    <WebView
+        android:id="@+id/lightwidgetWebView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Fragmento Principal"
-        android:textSize="20sp"
-        android:textColor="@android:color/black"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toTopOf="parent" />
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

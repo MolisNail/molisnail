@@ -96,13 +96,22 @@ public class PerfilFragment extends Fragment {
                                         .update("nivel", nivel); // Guarda el valor por defecto en Firestore
                             }
 
+                            View levelCard = getView().findViewById(R.id.level_card);
+                            if (nivel.equals("bronze")) {
+                                levelCard.setBackgroundColor(getResources().getColor(R.color.bronze));
+                            } else if (nivel.equals("silver")) {
+                                levelCard.setBackgroundColor(getResources().getColor(R.color.silver));
+                            } else if (nivel.equals("gold")) {
+                                levelCard.setBackgroundColor(getResources().getColor(R.color.gold));
+                            }
+
                             // Verificar si el campo "puntos" existe y asignar un valor por defecto si es null
                             Long puntosLong = documentSnapshot.getLong("puntos");
                             int puntos = (puntosLong != null) ? puntosLong.intValue() : 0;
 
                             // Mostrar datos en la interfaz
-                            levelTextView.setText(nivel);
-                            pointsTextView.setText(String.valueOf(puntos));
+                            levelTextView.setText("Nivel: "+nivel);
+                            pointsTextView.setText("Puntos: "+String.valueOf(puntos));
 
                             // Configurar la barra de progreso
                             setupProgressBar(nivel, puntos);

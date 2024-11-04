@@ -4,4 +4,9 @@
     <color name="white">#FFFFFFFF</color>
     <color name="light_background_main">#ffefff</color>
     <color name="dark_background_main">#af6faf</color>
+    <color name="holo_green_light">#32CD32</color>
+    <color name="bronze">#CD7F32</color>
+    <color name="silver">#C0C0C0</color>
+    <color name="gold">#FFD700</color>
+    <color name="less_dark_background_main">#6b2b6b</color>
 </resources>

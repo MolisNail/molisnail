@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         // Cargar los datos del usuario
         loadUserData();
 
-        // Configurar el menú inferior
+
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
         bottomNav.setOnNavigationItemSelectedListener(navListener);
 
@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, new HomeFragment()).commit();
-            bottomNav.setSelectedItemId(R.id.nav_home); // Selecciona el icono inicial
+            bottomNav.setSelectedItemId(R.id.nav_home);
         }
     }
 
@@ -66,23 +66,22 @@ public class MainActivity extends AppCompatActivity {
                     Fragment selectedFragment = null;
 
                     if (item.getItemId() == R.id.nav_catalogo) {
-                        toolbar.setVisibility(Toolbar.VISIBLE);  // Muestra el Toolbar
+                        toolbar.setVisibility(Toolbar.VISIBLE);
                         selectedFragment = new CatalogoFragment();
                     } else if (item.getItemId() == R.id.nav_citas) {
-                        toolbar.setVisibility(Toolbar.VISIBLE);  // Muestra el Toolbar
+                        toolbar.setVisibility(Toolbar.VISIBLE);
                         selectedFragment = new CitasFragment();
                     } else if (item.getItemId() == R.id.nav_home) {
-                        toolbar.setVisibility(Toolbar.VISIBLE);  // Muestra el Toolbar
+                        toolbar.setVisibility(Toolbar.VISIBLE);
                         selectedFragment = new HomeFragment();
                     } else if (item.getItemId() == R.id.nav_tienda) {
-                        toolbar.setVisibility(Toolbar.VISIBLE);  // Muestra el Toolbar
+                        toolbar.setVisibility(Toolbar.VISIBLE);
                         selectedFragment = new TiendaFragment();
                     } else if (item.getItemId() == R.id.nav_perfil) {
-                        toolbar.setVisibility(Toolbar.GONE);  // Oculta el Toolbar en Perfil
+                        toolbar.setVisibility(Toolbar.GONE);
                         selectedFragment = new PerfilFragment();
                     }
 
-                    // Reemplaza el fragmento
                     if (selectedFragment != null) {
                         getSupportFragmentManager().beginTransaction()
                                 .replace(R.id.fragment_container, selectedFragment)
