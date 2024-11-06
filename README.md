@@ -10,7 +10,7 @@ Esta es una aplicación móvil desarrollada para **Moli's Nail**, un salón de u
 
 ## Requisitos previos
 
-Antes de empezar, asegúrate de contar con lo siguiente:
+Antes de empezar, deberás de contar con lo siguiente:
 
 - **Android Studio** instalado en tu ordenador.
 - **JDK** (Java Development Kit) versión 8 o superior.
@@ -31,7 +31,7 @@ cd molis-nail-app
 2. Selecciona **Open an Existing Project** y elige la carpeta del proyecto `molis-nail-app` que has clonado.
 3. Android Studio sincronizará las dependencias y preparará el proyecto para ser ejecutado.
 
-## 3. Configuración de Firebase (Opcional)
+## 3. Configuración de Firebase
 
 Para integrar autenticación y Firestore en la app:
 
@@ -39,7 +39,7 @@ Para integrar autenticación y Firestore en la app:
 2. Añade una aplicación Android en Firebase y descarga el archivo `google-services.json`.
 3. Coloca el archivo `google-services.json` en la carpeta `app` de tu proyecto.
 
-## 4. Widget de Instagram (Opcional)
+## 4. Widget de Instagram
 
 La aplicación puede mostrar publicaciones de Instagram usando el widget de **LightWidget**. Para configurarlo:
 
@@ -60,4 +60,4 @@ Una vez configurado e importado el proyecto en Android Studio, sigue estos pasos
 
 Para más información o preguntas, puedes ponerte en contacto a través de:
 
-- **Email**: contact@molisnail.com
+- **Email**: `contact@molisnail.com`
