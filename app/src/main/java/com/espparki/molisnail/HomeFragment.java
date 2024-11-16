@@ -25,8 +25,13 @@ public class HomeFragment extends Fragment {
 
         // Configuración de LightWidget
         lightwidgetWebView = view.findViewById(R.id.lightwidgetWebView);
+
+        // Configuración del WebView
         WebSettings webSettings = lightwidgetWebView.getSettings();
         webSettings.setJavaScriptEnabled(true);
+        webSettings.setDomStorageEnabled(true); // Habilita almacenamiento DOM
+        webSettings.setAllowFileAccess(true); // Permite acceso a archivos locales
+        webSettings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW); // Permite contenido mixto
 
         // Establece un WebViewClient personalizado para manejar URLs específicas
         lightwidgetWebView.setWebViewClient(new WebViewClient() {

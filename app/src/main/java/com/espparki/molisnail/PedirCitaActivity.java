@@ -1,8 +1,6 @@
 package com.espparki.molisnail;
 
-import android.app.DatePickerDialog;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
@@ -10,18 +8,24 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.material.datepicker.CalendarConstraints;
+import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
 
 public class PedirCitaActivity extends AppCompatActivity {
 
     private Spinner timeSpinner;
     private Spinner serviceSpinner;
+    private Button btnSelectDate;
     private Button btnConfirmCita;
     private FirebaseFirestore db;
     private String selectedDateStr;
@@ -35,41 +39,62 @@ public class PedirCitaActivity extends AppCompatActivity {
 
         timeSpinner = findViewById(R.id.spinnerTime);
         serviceSpinner = findViewById(R.id.spinnerService);
+        btnSelectDate = findViewById(R.id.selectDateButton);
         btnConfirmCita = findViewById(R.id.btnConfirmCita);
 
-        // Muestra el DatePickerDialog cuando se selecciona la fecha
-        Button selectDateButton = findViewById(R.id.selectDateButton); // Botón para abrir el selector de fecha
-        selectDateButton.setOnClickListener(v -> showDatePickerDialog());
+        // Configura el botón de selección de fecha
+        btnSelectDate.setOnClickListener(v -> showDatePicker());
 
         // Configura el botón de confirmar cita
         btnConfirmCita.setOnClickListener(v -> confirmCita());
     }
 
-    private void showDatePickerDialog() {
-        Calendar today = Calendar.getInstance();
-        int year = today.get(Calendar.YEAR);
-        int month = today.get(Calendar.MONTH);
-        int dayOfMonth = today.get(Calendar.DAY_OF_MONTH);
+    private void showDatePicker() {
+        // Define restricciones de fecha
+        CalendarConstraints.Builder constraintsBuilder = new CalendarConstraints.Builder();
+        constraintsBuilder.setValidator(new CalendarConstraints.DateValidator() {
+            @Override
+            public boolean isValid(long date) {
+                Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+                calendar.setTimeInMillis(date);
+                int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
 
-        DatePickerDialog datePickerDialog = new DatePickerDialog(this, (view, selectedYear, selectedMonth, selectedDay) -> {
-            Calendar selectedDate = Calendar.getInstance();
-            selectedDate.set(selectedYear, selectedMonth, selectedDay);
-            int dayOfWeek = selectedDate.get(Calendar.DAY_OF_WEEK);
-
-            if (dayOfWeek == Calendar.TUESDAY || dayOfWeek == Calendar.THURSDAY ||
-                    dayOfWeek == Calendar.SATURDAY || dayOfWeek == Calendar.SUNDAY) {
-                selectedDateStr = String.format("%02d-%02d-%04d", selectedDay, selectedMonth + 1, selectedYear);
-                checkAvailableTimes(selectedDateStr, new ArrayList<>(Arrays.asList(
-                        "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30",
-                        "15:00", "15:30", "16:00", "16:30"
-                )));
-            } else {
-                Toast.makeText(PedirCitaActivity.this, "Solo puedes seleccionar martes, jueves o fines de semana.", Toast.LENGTH_SHORT).show();
+                // Solo permite martes, jueves y fines de semana
+                return dayOfWeek == Calendar.TUESDAY || dayOfWeek == Calendar.THURSDAY ||
+                        dayOfWeek == Calendar.SATURDAY || dayOfWeek == Calendar.SUNDAY;
             }
-        }, year, month, dayOfMonth);
 
-        datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis()); // Solo fechas futuras
-        datePickerDialog.show();
+            @Override
+            public int describeContents() {
+                return 0;
+            }
+
+            @Override
+            public void writeToParcel(android.os.Parcel dest, int flags) {
+            }
+        });
+
+        // Crea el MaterialDatePicker
+        MaterialDatePicker<Long> datePicker = MaterialDatePicker.Builder.datePicker()
+                .setTitleText("Seleccionar Fecha")
+                .setCalendarConstraints(constraintsBuilder.build())
+                .build();
+
+        // Manejador de selección de fecha
+        datePicker.addOnPositiveButtonClickListener(selection -> {
+            // Validar la fecha seleccionada
+            Calendar selectedCalendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+            selectedCalendar.setTimeInMillis(selection);
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
+            selectedDateStr = dateFormat.format(selectedCalendar.getTime());
+
+            checkAvailableTimes(selectedDateStr, new ArrayList<>(Arrays.asList(
+                    "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30",
+                    "15:00", "15:30", "16:00", "16:30"
+            )));
+        });
+
+        datePicker.show(getSupportFragmentManager(), "MaterialDatePicker");
     }
 
     private void checkAvailableTimes(String date, List<String> times) {
@@ -86,20 +111,22 @@ public class PedirCitaActivity extends AppCompatActivity {
                     timeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     timeSpinner.setAdapter(timeAdapter);
                 })
-                .addOnFailureListener(e -> Log.e("Firebase", "Error al verificar disponibilidad de horas", e));
+                .addOnFailureListener(e -> Toast.makeText(this, "Error al verificar disponibilidad", Toast.LENGTH_SHORT).show());
     }
 
     private void confirmCita() {
-        // Obtén los valores seleccionados y guárdalos en Firestore
         String selectedTime = (String) timeSpinner.getSelectedItem();
         String selectedService = (String) serviceSpinner.getSelectedItem();
 
         if (selectedDateStr != null && selectedTime != null && selectedService != null) {
             db.collection("citas").add(new Cita(selectedDateStr, selectedTime, selectedService))
-                    .addOnSuccessListener(documentReference ->
-                            Toast.makeText(PedirCitaActivity.this, "Cita confirmada", Toast.LENGTH_SHORT).show())
-                    .addOnFailureListener(e ->
-                            Toast.makeText(PedirCitaActivity.this, "Error al confirmar la cita", Toast.LENGTH_SHORT).show());
+                    .addOnSuccessListener(documentReference -> {
+                        Toast.makeText(this, "Cita confirmada", Toast.LENGTH_SHORT).show();
+
+                        // Volver al fragmento de citas
+                        finish(); // Finaliza la actividad actual y regresa a la anterior
+                    })
+                    .addOnFailureListener(e -> Toast.makeText(this, "Error al confirmar la cita", Toast.LENGTH_SHORT).show());
         } else {
             Toast.makeText(this, "Por favor, selecciona una fecha, hora y servicio", Toast.LENGTH_SHORT).show();
         }

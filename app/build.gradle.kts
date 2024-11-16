@@ -54,5 +54,7 @@ dependencies {
     implementation("com.google.android.gms:play-services-auth:20.0.0")
     implementation("com.github.bumptech.glide:glide:4.12.0")
     annotationProcessor ("com.github.bumptech.glide:compiler:4.12.0")
+    implementation("com.google.android.material:material:1.9.0")
+
 
 }
