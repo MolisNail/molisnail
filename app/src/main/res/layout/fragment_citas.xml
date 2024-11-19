@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:textColor="@color/dark_background_main"
-        android:text="Próxima cita: Lunes, 10 de Noviembre a las 10:00"
+        android:text=""
         app:layout_constraintTop_toBottomOf="@id/tvMisCitas"
         app:layout_constraintStart_toStartOf="parent"/>
 
@@ -43,6 +43,7 @@
         android:id="@+id/calendarView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:theme="@style/CustomCalendarView"
         app:layout_constraintTop_toBottomOf="@id/tvProximaCita"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -52,11 +53,28 @@
     <!-- Botón para pedir citas -->
     <Button
         android:id="@+id/btnPedirCita"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:backgroundTint="@color/dark_background_main"
+        android:textColor="@color/light_background_main"
         android:text="Pedir cita"
         app:layout_constraintTop_toBottomOf="@id/calendarView"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/btnVerMisCitas"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="16dp" />
+
+    <!-- Botón para ver citas -->
+    <Button
+        android:id="@+id/btnVerMisCitas"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/dark_background_main"
+        android:textColor="@color/light_background_main"
+        android:text="Ver mis citas"
+        app:layout_constraintTop_toBottomOf="@id/calendarView"
+        app:layout_constraintStart_toEndOf="@id/btnPedirCita"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp"/>
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>

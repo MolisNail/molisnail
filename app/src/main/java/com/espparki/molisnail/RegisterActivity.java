@@ -3,13 +3,13 @@ package com.espparki.molisnail;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -103,6 +103,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     // Método para crear el usuario en Firestore
+// Método para crear el usuario en Firestore
     private void createUserInFirestore(FirebaseUser firebaseUser) {
         Map<String, Object> user = new HashMap<>();
         user.put("correo", firebaseUser.getEmail());
@@ -114,12 +115,11 @@ public class RegisterActivity extends AppCompatActivity {
         db.collection("usuarios").document(firebaseUser.getUid())
                 .set(user)
                 .addOnSuccessListener(aVoid -> {
-                    // El usuario se creó correctamente en Firestore
-                    Toast.makeText(RegisterActivity.this, "Usuario creado en Firestore", Toast.LENGTH_SHORT).show();
+                    Log.d("Firestore", "Usuario creado correctamente en Firestore");
                 })
                 .addOnFailureListener(e -> {
-                    // Error al crear el usuario en Firestore
-                    Toast.makeText(RegisterActivity.this, "Error al crear el usuario en Firestore", Toast.LENGTH_LONG).show();
+                    Log.w("Firestore", "Error al crear el usuario en Firestore", e);
                 });
     }
+
 }

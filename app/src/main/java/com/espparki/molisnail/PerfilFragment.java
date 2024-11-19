@@ -73,7 +73,7 @@ public class PerfilFragment extends Fragment {
                         if (documentSnapshot.exists()) {
                             // Obtener y mostrar el correo
                             String email = documentSnapshot.getString("email");
-                            emailTextView.setText("Correo: "+ email);
+                            emailTextView.setText("Correo: " + email);
 
                             // Obtener y mostrar el nombre
                             String name = documentSnapshot.getString("name");
@@ -81,57 +81,80 @@ public class PerfilFragment extends Fragment {
                                 userNameTextView.setText(name);
                             }
 
-                            // Obtener y mostrar la foto de perfil (si está disponible)
+                            // Obtener y mostrar la foto de perfil
                             String photoUrl = documentSnapshot.getString("photo");
                             if (photoUrl != null) {
                                 Uri photoUri = Uri.parse(photoUrl);
-                                Glide.with(this).load(photoUri).into(profileImageView); // Usando Glide para cargar la imagen
+                                Glide.with(this).load(photoUri).into(profileImageView);
                             }
 
-                            // Verificar y asignar nivel y puntos por defecto
-                            String nivel = documentSnapshot.getString("nivel");
-                            if (nivel == null) {
-                                nivel = "Nivel: bronze"; // Valor por defecto
-                                db.collection("usuarios").document(user.getUid())
-                                        .update("nivel", nivel); // Guarda el valor por defecto en Firestore
-                            }
-
-                            View levelCard = getView().findViewById(R.id.level_card);
-                            if (nivel.equals("bronze")) {
-                                levelCard.setBackgroundColor(getResources().getColor(R.color.bronze));
-                            } else if (nivel.equals("silver")) {
-                                levelCard.setBackgroundColor(getResources().getColor(R.color.silver));
-                            } else if (nivel.equals("gold")) {
-                                levelCard.setBackgroundColor(getResources().getColor(R.color.gold));
-                            }
-
-                            // Verificar si el campo "puntos" existe y asignar un valor por defecto si es null
+                            // Obtener y persistir los puntos
                             Long puntosLong = documentSnapshot.getLong("puntos");
                             int puntos = (puntosLong != null) ? puntosLong.intValue() : 0;
 
-                            // Mostrar datos en la interfaz
-                            levelTextView.setText("Nivel: "+nivel);
-                            pointsTextView.setText("Puntos: "+String.valueOf(puntos));
+                            // Calcular y persistir el nivel basado en los puntos
+                            String nivel = calcularNivel(puntos);
+                            db.collection("usuarios").document(user.getUid())
+                                    .update("nivel", nivel);
+
+                            // Actualizar los datos del perfil
+                            levelTextView.setText("Nivel: " + nivel);
+                            pointsTextView.setText("Puntos: " + puntos);
 
                             // Configurar la barra de progreso
                             setupProgressBar(nivel, puntos);
+
+                            // Actualizar el color de la tarjeta del nivel
+                            updateLevelCardColor(nivel);
                         }
                     })
                     .addOnFailureListener(e -> Log.w("Firestore", "Error al obtener los datos del usuario.", e));
         }
     }
 
-    // Configurar la barra de progreso según el nivel
+    // Método para calcular el nivel basado en los puntos
+    private String calcularNivel(int puntos) {
+        if (puntos >= 300) {
+            return "gold";
+        } else if (puntos >= 100) {
+            return "silver";
+        } else {
+            return "bronze";
+        }
+    }
+
+    // Método para actualizar el color de la tarjeta del nivel
+    private void updateLevelCardColor(String nivel) {
+        View levelCard = getView().findViewById(R.id.level_card); // Referencia a la CardView
+        if (levelCard != null) {
+            int colorRes;
+            switch (nivel) {
+                case "gold":
+                    colorRes = R.color.gold; // Reemplaza con el color real en tu archivo colors.xml
+                    break;
+                case "silver":
+                    colorRes = R.color.silver;
+                    break;
+                case "bronze":
+                default:
+                    colorRes = R.color.bronze;
+                    break;
+            }
+            levelCard.setBackgroundColor(getResources().getColor(colorRes, null));
+        }
+    }
+
+    // Configura la barra de progreso
     private void setupProgressBar(String nivel, int puntos) {
         if (nivel.equals("bronze")) {
-            progressBar.setMax(100);  // Puntos necesarios para pasar a silver
+            progressBar.setMax(100);
             progressBar.setProgress(puntos);
         } else if (nivel.equals("silver")) {
-            progressBar.setMax(500);  // Puntos necesarios para pasar a gold
-            progressBar.setProgress(puntos);
+            progressBar.setMax(200);
+            progressBar.setProgress(puntos - 100);
         } else if (nivel.equals("gold")) {
-            progressBar.setMax(500);  // Máximo alcanzado
-            progressBar.setProgress(puntos);
+            progressBar.setMax(500);
+            progressBar.setProgress(puntos - 300);
         }
     }
 

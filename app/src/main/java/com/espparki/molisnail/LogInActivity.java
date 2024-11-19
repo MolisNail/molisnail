@@ -132,18 +132,33 @@ public class LogInActivity extends AppCompatActivity {
     }
 
     // Guardar datos del usuario en Firestore
+// Guardar datos del usuario en Firestore
     private void saveUserDataToFirestore(FirebaseUser user, String name, String email, Uri photoUri) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        Map<String, Object> userData = new HashMap<>();
-        userData.put("name", name);
-        userData.put("email", email);
-        userData.put("photo", photoUri != null ? photoUri.toString() : null);
 
         db.collection("usuarios").document(user.getUid())
-                .set(userData)
-                .addOnSuccessListener(aVoid -> Toast.makeText(LogInActivity.this, "Datos guardados en Firestore", Toast.LENGTH_SHORT).show())
-                .addOnFailureListener(e -> Toast.makeText(LogInActivity.this, "Error al guardar en Firestore: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (!documentSnapshot.exists()) {
+                        // Solo crea el usuario si no existe
+                        Map<String, Object> userData = new HashMap<>();
+                        userData.put("name", name);
+                        userData.put("email", email);
+                        userData.put("photo", photoUri != null ? photoUri.toString() : null);
+                        userData.put("puntos", 0); // Puntos iniciales
+                        userData.put("nivel", "bronze"); // Nivel inicial
+
+                        db.collection("usuarios").document(user.getUid())
+                                .set(userData)
+                                .addOnSuccessListener(aVoid -> Log.d("Firestore", "Datos guardados en Firestore"))
+                                .addOnFailureListener(e -> Log.w("Firestore", "Error al guardar en Firestore", e));
+                    } else {
+                        Log.d("Firestore", "El usuario ya existe, no se sobrescribieron datos.");
+                    }
+                })
+                .addOnFailureListener(e -> Log.w("Firestore", "Error al verificar la existencia del usuario", e));
     }
+
 
     // Método para iniciar sesión con email y contraseña
     private void loginUser() {

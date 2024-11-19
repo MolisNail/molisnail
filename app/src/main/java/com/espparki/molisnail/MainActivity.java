@@ -19,7 +19,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements OnDataUpdateListener {
 
     private FirebaseAuth auth;
     private FirebaseFirestore db;
@@ -57,6 +57,9 @@ public class MainActivity extends AppCompatActivity {
                     .replace(R.id.fragment_container, new HomeFragment()).commit();
             bottomNav.setSelectedItemId(R.id.nav_home);
         }
+
+
+
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener navListener =
@@ -93,8 +96,13 @@ public class MainActivity extends AppCompatActivity {
 
             };
 
+    @Override
+    public void updateUserData() {
+        loadUserData();
+    }
+
     // Función para cargar los datos del usuario desde Firestore
-    private void loadUserData() {
+    public void loadUserData() {
         FirebaseUser user = auth.getCurrentUser();
 
         if (user != null) {
@@ -108,41 +116,62 @@ public class MainActivity extends AppCompatActivity {
                                 Uri photoUri = Uri.parse(photoUrl);
                                 Glide.with(this).load(photoUri).into(profileImage); // Cargar imagen con Glide
                             } else {
-                                profileImage.setImageResource(R.drawable.garras_icon); // Imagen predeterminada
+                                profileImage.setImageResource(R.drawable.ic_profile_picture); // Imagen predeterminada
                             }
 
-                            // Verificar el nivel del usuario
-                            String nivel = documentSnapshot.getString("nivel");
-                            if (nivel == null) {
-                                nivel = "bronze"; // Nivel por defecto
-                                db.collection("usuarios").document(user.getUid())
-                                        .update("nivel", nivel);
-                            }
-                            levelTextView.setText("Nivel " + nivel); // Mostrar el nivel del usuario
-
-                            // Verificar los puntos
+                            // Verificar y calcular el nivel del usuario según los puntos
                             Long puntosLong = documentSnapshot.getLong("puntos");
                             int puntos = (puntosLong != null) ? puntosLong.intValue() : 0;
+                            String nivel = calcularNivel(puntos);
 
-                            // Configurar la barra de progreso según el nivel y puntos
+                            // Actualizar el nivel en Firestore si es necesario
+                            db.collection("usuarios").document(user.getUid())
+                                    .update("nivel", nivel);
+
+                            // Actualizar el nivel y puntos en el toolbar
+                            levelTextView.setText("Nivel " + nivel);
                             setupProgressBar(nivel, puntos);
                         }
                     })
-                    .addOnFailureListener(e -> {
-                        Log.w("Firestore", "Error al obtener los datos del usuario.", e);
-                    });
+                    .addOnFailureListener(e -> Log.w("Firestore", "Error al obtener los datos del usuario.", e));
         }
     }
+
+    // Método para determinar el nivel del usuario
+    private String calcularNivel(int puntos) {
+        if (puntos >= 300) {
+            return "gold";
+        } else if (puntos >= 100) {
+            return "silver";
+        } else {
+            return "bronze";
+        }
+    }
+
+    // Configura la barra de progreso en el toolbar según el nivel y los puntos
+
+
 
     // Configura la barra de progreso según el nivel
     private void setupProgressBar(String nivel, int puntos) {
         if (nivel.equals("bronze")) {
-            levelProgressBar.setMax(100);  // Puntos necesarios para pasar a silver
+            levelProgressBar.setMax(100);
+            levelProgressBar.setProgress(puntos);
         } else if (nivel.equals("silver")) {
-            levelProgressBar.setMax(500);  // Puntos necesarios para pasar a gold
+            levelProgressBar.setMax(200); // Puntos necesarios para alcanzar gold
+            levelProgressBar.setProgress(puntos - 100); // Restar los puntos acumulados en bronze
         } else if (nivel.equals("gold")) {
-            levelProgressBar.setMax(500);  // Máximo alcanzado
+            levelProgressBar.setMax(500); // Límite para el progreso en gold
+            levelProgressBar.setProgress(puntos - 300); // Restar los puntos acumulados en silver
         }
-        levelProgressBar.setProgress(puntos); // Configura la barra de progreso
     }
+
+    public void updateProfilePhoto(String photoUrl) {
+        if (photoUrl != null && !photoUrl.isEmpty()) {
+            Glide.with(this).load(photoUrl).into(profileImage);
+        } else {
+            profileImage.setImageResource(R.drawable.ic_profile_picture);
+        }
+    }
+
 }

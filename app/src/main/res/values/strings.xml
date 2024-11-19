@@ -9,4 +9,11 @@
         <item>Uñas acrílicas</item>
         <item>Decoración</item>
     </string-array>
+
+    <string-array name="filter_options">
+        <item>Nombre</item>
+        <item>Precio</item>
+        <item>Favoritos</item>
+    </string-array>
+
 </resources>
