@@ -14,6 +14,10 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
+import com.espparki.molisnail.catalogo.CatalogoFragment;
+import com.espparki.molisnail.citas.CitasFragment;
+import com.espparki.molisnail.perfil.PerfilFragment;
+import com.espparki.molisnail.tienda.TiendaFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -116,7 +120,7 @@ public class MainActivity extends AppCompatActivity implements OnDataUpdateListe
                                 Uri photoUri = Uri.parse(photoUrl);
                                 Glide.with(this).load(photoUri).into(profileImage); // Cargar imagen con Glide
                             } else {
-                                profileImage.setImageResource(R.drawable.ic_profile_picture); // Imagen predeterminada
+                                profileImage.setImageResource(R.drawable.ic_default_profile_picture); // Imagen predeterminada
                             }
 
                             // Verificar y calcular el nivel del usuario según los puntos
@@ -170,7 +174,7 @@ public class MainActivity extends AppCompatActivity implements OnDataUpdateListe
         if (photoUrl != null && !photoUrl.isEmpty()) {
             Glide.with(this).load(photoUrl).into(profileImage);
         } else {
-            profileImage.setImageResource(R.drawable.ic_profile_picture);
+            profileImage.setImageResource(R.drawable.ic_default_profile_picture);
         }
     }
 

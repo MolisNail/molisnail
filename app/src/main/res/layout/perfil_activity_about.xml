@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:background="@color/light_background_main">
+
+    <!-- Título de bienvenida -->
+    <TextView
+        android:id="@+id/titleTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/title_about"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textAlignment="center"
+        android:textColor="@color/dark_background_main"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp" />
+
+    <!-- Explicación general -->
+    <TextView
+        android:id="@+id/generalDescriptionTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/general_description"
+        android:textSize="16sp"
+        android:textColor="@color/black"
+        android:lineSpacingExtra="4dp"
+        app:layout_constraintTop_toBottomOf="@id/titleTextView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp" />
+
+    <!-- Reserva de citas -->
+    <TextView
+        android:id="@+id/appointmentTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/reservation_description"
+        android:textSize="16sp"
+        android:textColor="@color/black"
+        android:lineSpacingExtra="4dp"
+        app:layout_constraintTop_toBottomOf="@id/generalDescriptionTextView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp" />
+
+    <!-- Catálogo de uñas -->
+    <TextView
+        android:id="@+id/catalogTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/catalog_description"
+        android:textSize="16sp"
+        android:textColor="@color/black"
+        android:lineSpacingExtra="4dp"
+        app:layout_constraintTop_toBottomOf="@id/appointmentTextView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp" />
+
+    <!-- Tienda de productos -->
+    <TextView
+        android:id="@+id/storeTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/store_description"
+        android:textSize="16sp"
+        android:textColor="@color/black"
+        android:lineSpacingExtra="4dp"
+        app:layout_constraintTop_toBottomOf="@id/catalogTextView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp" />
+
+    <!-- Historial de citas -->
+    <TextView
+        android:id="@+id/historyTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/history_description"
+        android:textSize="16sp"
+        android:textColor="@color/black"
+        android:lineSpacingExtra="4dp"
+        app:layout_constraintTop_toBottomOf="@id/storeTextView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp" />
+
+    <!-- Sistema de puntos -->
+    <TextView
+        android:id="@+id/pointsSystemTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/points_system_description"
+        android:textSize="16sp"
+        android:textColor="@color/black"
+        android:lineSpacingExtra="4dp"
+        app:layout_constraintTop_toBottomOf="@id/historyTextView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp" />
+</androidx.constraintlayout.widget.ConstraintLayout>

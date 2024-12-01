@@ -8,5 +8,5 @@
     <color name="bronze">#CD7F32</color>
     <color name="silver">#C0C0C0</color>
     <color name="gold">#FFD700</color>
-    <color name="less_dark_background_main">#6b2b6b</color>
+    <color name="more_dark_background_main">#6b2b6b</color>
 </resources>

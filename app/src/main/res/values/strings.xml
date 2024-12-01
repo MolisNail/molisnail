@@ -16,4 +16,15 @@
         <item>Favoritos</item>
     </string-array>
 
+    <string name="texto_review_introduccion">¡Gracias por usar Moli´s Nail! Nos encantaría saber las opiniones de nuestros usuarios para poder crecer como aplicación y como empresa, y así ofrecerte la mejor experiencia posible. ¡Deja tu opinión!</string>
+
+    <string name="title_about">Bienvenido a Moli´s Nail</string>
+    <string name="general_description">Nuestra aplicación está diseñada para facilitarte el cuidado y mantenimiento de tus uñas. A continuación, te mostramos las funcionalidades principales:</string>
+    <string name="reservation_description">1. Reserva de citas:\nSelecciona el tratamiento que deseas y elige la fecha y hora que mejor te convengan. Podrás ver tu cita programada y recibir recordatorios para que no la olvides.</string>
+    <string name="catalog_description">2. Catálogo de uñas:\nExplora los diseños más recientes y tendencias en el cuidado de uñas. Podrás buscar un diseño que te guste y pedirlo en tu próxima cita.</string>
+    <string name="store_description">3. Tienda de productos:\nDescubre una amplia gama de productos para el cuidado y decoración de tus uñas. Compra fácilmente desde la aplicación y recibe tus productos en la comodidad de tu hogar.</string>
+    <string name="history_description">4. Historial de citas:\nConsulta tus citas anteriores para llevar un control de los tratamientos realizados y planificar tus próximas visitas de manera más eficiente.</string>
+    <string name="points_system_description">5. Sistema de puntos:\n- Cada vez que pides una cita, ganas puntos dependiendo del servicio solicitado.\n- Por ejemplo:\n   • Manicura: 7 puntos.\n   • Pedicura: 6 puntos.\n   • Uñas Acrílicas: 8 puntos.\n   • Uñas de Gel: 9 puntos.\n   • Decoración de Uñas: 3 puntos.\n- Los puntos acumulados te permiten acceder a descuentos exclusivos y promociones.</string>
+
+
 </resources>

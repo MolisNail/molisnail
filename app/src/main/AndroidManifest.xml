@@ -25,17 +25,17 @@
         </activity>
 
         <!-- Declaración de Activies -->
-        <activity android:name=".LogInActivity" />
-        <activity android:name=".RegisterActivity" />
+        <activity android:name=".login.LogInActivity" />
+        <activity android:name=".login.RegisterActivity" />
         <activity android:name=".MainActivity"/>
-        <activity android:name=".AboutActivity"/>
-        <activity android:name=".ConfigurationActivity"/>
-        <activity android:name=".ReviewActivity"/>
-        <activity android:name=".StoreActivity"/>
-        <activity android:name=".InspiracionActivity" android:theme="@style/DialogActivityTheme"/>
-        <activity android:name=".PedirCitaActivity" />
+        <activity android:name=".perfil.AboutActivity"/>
+        <activity android:name=".perfil.ConfigurationActivity"/>
+        <activity android:name=".perfil.ReviewActivity"/>
+        <activity android:name=".tienda.StoreActivity"/>
+        <activity android:name=".catalogo.InspiracionActivity" android:theme="@style/DialogActivityTheme"/>
+        <activity android:name=".citas.PedirCitaActivity" />
         <activity
-            android:name=".CartActivity"
+            android:name=".tienda.CartActivity"
             android:exported="true"> <!-- Esto permite que otras apps accedan a la actividad si es necesario -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -44,6 +44,11 @@
                 <data android:scheme="com.espparki.molisnail" android:host="paypalpay" />
             </intent-filter>
         </activity>
+        <activity android:name=".tienda.PaymentResultActivity" />
+        <activity android:name=".perfil.HistorialCitasActivity" />
+        <activity android:name=".admin.AdminActivity" />
+
+
 
 
 

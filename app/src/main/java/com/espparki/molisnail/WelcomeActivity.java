@@ -6,6 +6,8 @@ import android.os.Handler;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.espparki.molisnail.login.LogInActivity;
+
 public class WelcomeActivity extends AppCompatActivity {
 
     @Override
