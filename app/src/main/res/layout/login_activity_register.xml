@@ -32,7 +32,9 @@
         app:layout_constraintHorizontal_bias="0.621"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintWidth_percent="0.8" />
+        app:layout_constraintWidth_percent="0.8"
+        android:textColorHint="@color/light_background_main"
+        android:textColor="@color/light_background_main"/>
 
     <EditText
         android:id="@+id/etPassword"
@@ -46,7 +48,9 @@
         app:layout_constraintHorizontal_bias="0.621"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/etEmail"
-        app:layout_constraintWidth_percent="0.8" />
+        app:layout_constraintWidth_percent="0.8"
+        android:textColorHint="@color/light_background_main"
+        android:textColor="@color/light_background_main"/>
 
     <EditText
         android:id="@+id/etConfirmPassword"
@@ -60,7 +64,9 @@
         app:layout_constraintHorizontal_bias="0.621"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/etPassword"
-        app:layout_constraintWidth_percent="0.8" />
+        app:layout_constraintWidth_percent="0.8"
+        android:textColorHint="@color/light_background_main"
+        android:textColor="@color/light_background_main"/>
 
     <Button
         android:id="@+id/btnRegister"

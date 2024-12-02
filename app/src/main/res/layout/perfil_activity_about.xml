@@ -7,7 +7,6 @@
     android:padding="16dp"
     android:background="@color/light_background_main">
 
-    <!-- Título de bienvenida -->
     <TextView
         android:id="@+id/titleTextView"
         android:layout_width="0dp"
@@ -22,7 +21,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="16dp" />
 
-    <!-- Explicación general -->
     <TextView
         android:id="@+id/generalDescriptionTextView"
         android:layout_width="0dp"
@@ -36,7 +34,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="16dp" />
 
-    <!-- Reserva de citas -->
     <TextView
         android:id="@+id/appointmentTextView"
         android:layout_width="0dp"
@@ -50,7 +47,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="16dp" />
 
-    <!-- Catálogo de uñas -->
     <TextView
         android:id="@+id/catalogTextView"
         android:layout_width="0dp"
@@ -64,7 +60,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="16dp" />
 
-    <!-- Tienda de productos -->
     <TextView
         android:id="@+id/storeTextView"
         android:layout_width="0dp"
@@ -78,7 +73,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="16dp" />
 
-    <!-- Historial de citas -->
     <TextView
         android:id="@+id/historyTextView"
         android:layout_width="0dp"
@@ -92,7 +86,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="16dp" />
 
-    <!-- Sistema de puntos -->
     <TextView
         android:id="@+id/pointsSystemTextView"
         android:layout_width="0dp"
@@ -105,4 +98,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="16dp" />
+    <Button
+        android:id="@+id/btnBack"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_gravity="center_horizontal"
+        android:text="Volver"
+        android:backgroundTint="@color/dark_background_main"
+        android:textColor="@color/light_background_main"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

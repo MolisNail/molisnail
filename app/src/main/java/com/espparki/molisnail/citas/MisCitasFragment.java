@@ -45,7 +45,6 @@ public class MisCitasFragment extends Fragment {
 
         return view;
     }
-
     private void loadCitas() {
         String userId = auth.getCurrentUser().getUid();
 
@@ -54,7 +53,7 @@ public class MisCitasFragment extends Fragment {
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     citasList.clear();
-                    Date today = new Date(); // Fecha actual
+                    Date today = new Date();
 
                     for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                         String fecha = document.getString("fecha");
@@ -65,12 +64,22 @@ public class MisCitasFragment extends Fragment {
 
                         Cita cita = new Cita(fecha, hora, servicio, id, userIdFromDocument);
 
-                        // Filtra solo citas futuras
+                        // Filtrar solo citas futuras
                         Date citaDate = cita.getFechaAsDate();
                         if (citaDate != null && !citaDate.before(today)) {
                             citasList.add(cita);
                         }
                     }
+
+                    citasList.sort((c1, c2) -> {
+                        Date fecha1 = c1.getFechaAsDate();
+                        Date fecha2 = c2.getFechaAsDate();
+
+                        if (fecha1 != null && fecha2 != null) {
+                            return fecha1.compareTo(fecha2);
+                        }
+                        return 0;
+                    });
 
                     adapter = new CitasAdapter(citasList, this::deleteCita);
                     recyclerView.setAdapter(adapter);
@@ -78,13 +87,12 @@ public class MisCitasFragment extends Fragment {
                 .addOnFailureListener(e -> Toast.makeText(getContext(), "Error al cargar citas", Toast.LENGTH_SHORT).show());
     }
 
+
     private void deleteCita(Cita cita) {
         db.collection("citas").document(cita.getId())
                 .delete()
                 .addOnSuccessListener(aVoid -> {
                     int puntosARestar = getPuntosPorServicio(cita.getServicio());
-
-                    // Actualiza los puntos en Firestore
                     db.collection("usuarios").document(cita.getUserId())
                             .update("puntos", FieldValue.increment(-puntosARestar))
                             .addOnSuccessListener(aVoid2 -> {
@@ -122,7 +130,7 @@ public class MisCitasFragment extends Fragment {
                     if (puntosActuales == null) puntosActuales = 0L;
 
                     db.collection("usuarios").document(userId)
-                            .update("puntos", Math.max(0, puntosActuales - puntos)) // No permite negativos
+                            .update("puntos", Math.max(0, puntosActuales - puntos))
                             .addOnSuccessListener(aVoid -> {
                                 Toast.makeText(getContext(), "Puntos actualizados", Toast.LENGTH_SHORT).show();
                             })

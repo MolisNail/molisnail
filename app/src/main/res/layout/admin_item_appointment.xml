@@ -1,0 +1,73 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="?android:attr/selectableItemBackground">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="1">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Fecha:"
+                android:textColor="@color/light_background_main"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/tvAppointmentDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Fecha"
+                android:textColor="@color/light_background_main"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Hora:"
+                android:textColor="@color/light_background_main"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/tvAppointmentTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Hora"
+                android:textColor="@color/light_background_main"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Servicio:"
+                android:textColor="@color/light_background_main"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/tvAppointmentService"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Servicio"
+                android:textColor="@color/light_background_main"/>
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btnDeleteAppointment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Eliminar"
+            android:visibility="gone"
+            android:backgroundTint="@android:color/holo_red_light"
+            android:textColor="@color/light_background_main"/> <!-- Se controla visibilidad desde el adaptador -->
+    </LinearLayout>
+</LinearLayout>

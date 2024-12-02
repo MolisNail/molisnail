@@ -1,7 +1,6 @@
 package com.espparki.molisnail.perfil;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,6 +20,7 @@ import com.bumptech.glide.Glide;
 import com.espparki.molisnail.R;
 import com.espparki.molisnail.login.LogInActivity;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Arrays;
@@ -40,23 +40,15 @@ public class PerfilFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.perfil_fragment_perfil, container, false);
-
-        // Inicializar Firestore y Authentication
         db = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
-
-        // Referencias a los elementos de la interfaz
         emailTextView = view.findViewById(R.id.emailTextView);
         levelTextView = view.findViewById(R.id.levelTextView);
         pointsTextView = view.findViewById(R.id.pointsTextView);
         userNameTextView = view.findViewById(R.id.user_name);
         profileImageView = view.findViewById(R.id.profile_image);
         progressBar = view.findViewById(R.id.progressBar);
-
-        // Cargar los datos del usuario
         loadUserData();
-
-        // Inicializar RecyclerView para las opciones del perfil
         recyclerView = view.findViewById(R.id.profile_options_recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(new ProfileOptionsAdapter(optionsList, this::onOptionClick));
@@ -65,9 +57,12 @@ public class PerfilFragment extends Fragment {
     }
 
     private void loadUserData() {
-        if (auth.getCurrentUser() == null) return;
+        FirebaseUser currentUser = auth.getCurrentUser();
+        if (currentUser == null) return;
 
-        db.collection("usuarios").document(auth.getCurrentUser().getUid())
+        String userId = currentUser.getUid();
+
+        db.collection("usuarios").document(userId)
                 .get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (!isAdded() || getContext() == null) {
@@ -76,38 +71,30 @@ public class PerfilFragment extends Fragment {
                     }
 
                     if (documentSnapshot.exists()) {
-                        // Obtener y mostrar el correo
-                        String email = documentSnapshot.getString("email");
+                        String email = currentUser.getEmail();
+                        if (email == null || email.isEmpty()) {
+                            email = documentSnapshot.getString("email");
+                        }
                         emailTextView.setText("Correo: " + email);
-
-                        // Obtener y mostrar el nombre
                         String name = documentSnapshot.getString("name");
                         if (name != null) {
                             userNameTextView.setText(name);
                         }
-
-                        // Obtener y mostrar la foto de perfil
-                        String photoUrl = documentSnapshot.getString("photo");
+                        String photoUrl = currentUser.getPhotoUrl() != null
+                                ? currentUser.getPhotoUrl().toString()
+                                : documentSnapshot.getString("photo");
                         if (photoUrl != null && !photoUrl.isEmpty()) {
-                            Uri photoUri = Uri.parse(photoUrl);
-                            Glide.with(this).load(photoUri).into(profileImageView);
+                            Glide.with(this).load(photoUrl).into(profileImageView);
+                        } else {
+                            profileImageView.setImageResource(R.drawable.ic_default_profile_picture);
                         }
 
-                        // Obtener y mostrar los puntos
                         Long puntosLong = documentSnapshot.getLong("puntos");
                         int puntos = (puntosLong != null) ? puntosLong.intValue() : 0;
-
-                        // Calcular el nivel basado en los puntos
                         String nivel = calcularNivel(puntos);
-
-                        // Actualizar los datos del perfil
                         levelTextView.setText("Nivel: " + nivel);
                         pointsTextView.setText("Puntos: " + puntos);
-
-                        // Configurar la barra de progreso
                         setupProgressBar(nivel, puntos);
-
-                        // Actualizar el color de la tarjeta del nivel
                         updateLevelCardColor(nivel);
                     }
                 })

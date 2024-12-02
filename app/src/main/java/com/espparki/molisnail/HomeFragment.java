@@ -21,23 +21,21 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_home, container, false);
+        View view = inflater.inflate(R.layout.main_fragment_home, container, false);
 
-        // Configuración de LightWidget
         lightwidgetWebView = view.findViewById(R.id.lightwidgetWebView);
-
-        // Configuración del WebView
         WebSettings webSettings = lightwidgetWebView.getSettings();
         webSettings.setJavaScriptEnabled(true);
-        webSettings.setDomStorageEnabled(true); // Habilita almacenamiento DOM
-        webSettings.setAllowFileAccess(true); // Permite acceso a archivos locales
-        webSettings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW); // Permite contenido mixto
+        webSettings.setDomStorageEnabled(true);
+        webSettings.setAllowFileAccess(true);
+        webSettings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
 
-        // Establece un WebViewClient personalizado para manejar URLs específicas
+        // Establece el WebViewClient
         lightwidgetWebView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                // Si la URL tiene un esquema "intent://" o "instagram://", intenta abrir la app de Instagram
+
+                // Si la URL tiene un esquema "intent://" o "instagram://",  Abre la app de Instagram
                 if (url.startsWith("intent://") || url.startsWith("instagram://")) {
                     try {
                         Intent intent = Intent.parseUri(url, Intent.URI_INTENT_SCHEME);
@@ -49,14 +47,13 @@ public class HomeFragment extends Fragment {
                         e.printStackTrace();
                     }
                 } else {
-                    // Carga otras URLs en el WebView
                     view.loadUrl(url);
                 }
                 return true;
             }
         });
 
-        // Cargar la URL del widget de LightWidget
+        // URL del widget de LightWidget
         lightwidgetWebView.loadUrl("https://cdn.lightwidget.com/widgets/59ec7a51113158288c2ea0d0d6ec540b.html");
 
         return view;

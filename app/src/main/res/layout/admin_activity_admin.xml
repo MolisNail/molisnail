@@ -7,7 +7,6 @@
     android:padding="16dp"
     android:background="@color/black">
 
-    <!-- Título -->
     <TextView
         android:id="@+id/adminWelcomeTextView"
         android:layout_width="wrap_content"
@@ -21,7 +20,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="16dp" />
 
-    <!-- Botón para gestionar citas -->
     <androidx.cardview.widget.CardView
         android:id="@+id/manageAppointmentsCard"
         android:layout_width="0dp"
@@ -62,7 +60,6 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 
-    <!-- Botón para gestionar productos -->
     <androidx.cardview.widget.CardView
         android:id="@+id/manageProductsCard"
         android:layout_width="0dp"
@@ -101,7 +98,6 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 
-    <!-- Botón para gestionar catálogo -->
     <androidx.cardview.widget.CardView
         android:id="@+id/manageCatalogCard"
         android:layout_width="0dp"
@@ -140,7 +136,6 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 
-    <!-- Botón para gestionar usuarios -->
     <androidx.cardview.widget.CardView
         android:id="@+id/manageUsersCard"
         android:layout_width="0dp"
@@ -179,17 +174,29 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 
-    <!-- Botón para volver al inicio de sesión -->
     <Button
         android:id="@+id/backToLoginButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:backgroundTint="@android:color/holo_purple"
+        android:backgroundTint="@color/dark_background_main"
         android:text="Volver al inicio de sesión"
         android:textColor="@android:color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/manageUsersCard" />
+
+    <Button
+        android:id="@+id/changeAdminPasswordButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:backgroundTint="@color/dark_background_main"
+        android:text="Cambiar Contraseña de Administrador"
+        android:textColor="@android:color/white"
+        app:layout_constraintTop_toBottomOf="@id/backToLoginButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

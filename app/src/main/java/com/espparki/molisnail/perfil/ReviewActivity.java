@@ -42,24 +42,20 @@ public class ReviewActivity extends AppCompatActivity {
 
         db = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
-
-        // Inicializar vistas
         recyclerView = findViewById(R.id.recyclerViewReviews);
         reviewEditText = findViewById(R.id.editTextReview);
         ratingBar = findViewById(R.id.ratingBar);
         submitButton = findViewById(R.id.submitReviewButton);
         averageRatingTextView = findViewById(R.id.averageRatingTextView);
-
-        // Configurar RecyclerView
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new ReviewAdapter(reviewList);
         recyclerView.setAdapter(adapter);
-
-        // Cargar reseñas existentes
         loadReviews();
-
-        // Manejar el botón de enviar reseña
         submitButton.setOnClickListener(v -> submitReview());
+
+        findViewById(R.id.btnBack).setOnClickListener(v -> {
+            finish();
+        });
     }
 
     private void loadReviews() {
@@ -81,7 +77,7 @@ public class ReviewActivity extends AppCompatActivity {
 
                     adapter.notifyDataSetChanged();
 
-                    // Calcular la media de las valoraciones
+                    //media de reviews
                     if (reviewCount > 0) {
                         float averageRating = totalRating / reviewCount;
                         averageRatingTextView.setText(String.format("Valoración media: %.1f", averageRating));
@@ -102,19 +98,16 @@ public class ReviewActivity extends AppCompatActivity {
             return;
         }
 
-        // Crear el objeto de la reseña
         Map<String, Object> reviewData = new HashMap<>();
         reviewData.put("userId", userId);
         reviewData.put("review", reviewText);
         reviewData.put("rating", rating);
-
-        // Subir la reseña a Firestore
         db.collection("reviews").add(reviewData)
                 .addOnSuccessListener(documentReference -> {
                     Toast.makeText(this, "Reseña enviada con éxito", Toast.LENGTH_SHORT).show();
                     reviewEditText.setText("");
                     ratingBar.setRating(0);
-                    loadReviews(); // Recargar reseñas
+                    loadReviews();
                 })
                 .addOnFailureListener(e -> Toast.makeText(this, "Error al enviar la reseña", Toast.LENGTH_SHORT).show());
     }

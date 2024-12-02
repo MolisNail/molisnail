@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     android:background="@color/light_background_main">
 
-    <!-- Filtro y Carrito -->
     <LinearLayout
         android:id="@+id/top_bar"
         android:layout_width="match_parent"
@@ -18,7 +17,6 @@
         app:layout_constraintEnd_toEndOf="parent">
 
 
-    <!-- Botón de Filtro -->
         <ImageButton
             android:id="@+id/filter_button"
             android:layout_width="wrap_content"
@@ -28,13 +26,11 @@
             android:background="?android:attr/selectableItemBackgroundBorderless"
             android:padding="8dp" />
 
-        <!-- Separador para el espacio restante -->
         <View
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1" />
 
-        <!-- Botón de Carrito -->
         <ImageButton
             android:id="@+id/cart_icon"
             android:layout_width="wrap_content"
@@ -45,7 +41,6 @@
             android:padding="8dp" />
     </LinearLayout>
 
-    <!-- RecyclerView para los productos -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view_products"
         android:layout_width="match_parent"

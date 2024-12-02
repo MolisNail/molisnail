@@ -17,7 +17,6 @@ public class PayPalTokenManager {
         PayPalApi api = PayPalService.getRetrofitInstance().create(PayPalApi.class);
         String authHeader = Credentials.basic(PayPalConfig.CLIENT_ID, PayPalConfig.SECRET);
 
-        // Llamada actualizada
         Call<AccessTokenResponse> call = api.getAccessToken(authHeader, "client_credentials");
         call.enqueue(new Callback<AccessTokenResponse>() {
             @Override

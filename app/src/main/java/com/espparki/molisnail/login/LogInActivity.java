@@ -196,4 +196,6 @@ public class LogInActivity extends AppCompatActivity {
                     Toast.makeText(this, "Error al verificar la contraseña", Toast.LENGTH_SHORT).show();
                 });
     }
+
 }
+

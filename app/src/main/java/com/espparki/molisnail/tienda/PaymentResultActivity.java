@@ -10,8 +10,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.espparki.molisnail.R;
 
-import java.util.List;
-
 public class PaymentResultActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
@@ -30,15 +28,12 @@ public class PaymentResultActivity extends AppCompatActivity {
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        // Obtener los datos pasados desde la CartActivity
-        List<CartItem> cartItems = getIntent().getParcelableArrayListExtra("cart_items");
-        String paymentId = getIntent().getStringExtra("payment_id");
-
-        // Configurar el adaptador con los productos adquiridos
-        adapter = new PaymentResultAdapter(cartItems);
+        // Obtener los datos del carrito desde CartDataHolder
+        adapter = new PaymentResultAdapter(CartDataHolder.getInstance().getCartItems());
         recyclerView.setAdapter(adapter);
 
         // Mostrar el ID del pago
+        String paymentId = getIntent().getStringExtra("payment_id");
         paymentIdText.setText(String.format("ID del Pago: %s", paymentId));
 
         // Botón para finalizar y regresar

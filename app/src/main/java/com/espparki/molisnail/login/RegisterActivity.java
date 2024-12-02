@@ -24,8 +24,6 @@ public class RegisterActivity extends AppCompatActivity {
 
     private EditText etEmail, etPassword, etConfirmPassword;
     private Button btnRegister;
-
-    // Firebase Auth and Firestore instances
     private FirebaseAuth Auth;
     private FirebaseFirestore db;
 
@@ -34,17 +32,12 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_activity_register);
 
-        // Inicializar los elementos de la interfaz
         etEmail = findViewById(R.id.etEmail);
         etPassword = findViewById(R.id.etPassword);
         etConfirmPassword = findViewById(R.id.etConfirmPassword);
         btnRegister = findViewById(R.id.btnRegister);
-
-        // Inicializar FirebaseAuth y Firestore
         Auth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
-
-        // Configurar el botón de registro
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -53,13 +46,11 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
-    // Método para registrar al usuario
     private void registerUser() {
         String email = etEmail.getText().toString().trim();
         String password = etPassword.getText().toString().trim();
         String confirmPassword = etConfirmPassword.getText().toString().trim();
 
-        // Validaciones básicas
         if (TextUtils.isEmpty(email)) {
             etEmail.setError("Introduce un correo electrónico");
             return;
@@ -81,38 +72,29 @@ public class RegisterActivity extends AppCompatActivity {
             return;
         }
 
-        // Registro del usuario en Firebase Authentication
         Auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                // Obtener el usuario recién registrado
                 FirebaseUser firebaseUser = Auth.getCurrentUser();
 
                 if (firebaseUser != null) {
-                    // Crear el usuario en Firestore
                     createUserInFirestore(firebaseUser);
-
-                    // Registro exitoso, redirigir al login o al main
                     Toast.makeText(RegisterActivity.this, "Registro exitoso", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(RegisterActivity.this, LogInActivity.class));
                     finish();
                 }
             } else {
-                // Error en el registro
                 Toast.makeText(RegisterActivity.this, "Error: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
             }
         });
     }
 
-    // Método para crear el usuario en Firestore
-// Método para crear el usuario en Firestore
+    //creación de usuario en Firestore
     private void createUserInFirestore(FirebaseUser firebaseUser) {
         Map<String, Object> user = new HashMap<>();
         user.put("correo", firebaseUser.getEmail());
-        user.put("foto_perfil", "");  // Puedes agregar una URL de foto de perfil si la tienes
-        user.put("puntos", 0);  // Puntos iniciales en 0
-        user.put("nivel", "bronze"); // Nivel inicial
-
-        // Guardar los datos en Firestore
+        user.put("foto_perfil", "");
+        user.put("puntos", 0);
+        user.put("nivel", "bronze");
         db.collection("usuarios").document(firebaseUser.getUid())
                 .set(user)
                 .addOnSuccessListener(aVoid -> {

@@ -11,10 +11,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Molisnail"
-        tools:targetApi="31">
+        tools:targetApi="31"
+        android:enableOnBackInvokedCallback="true">
 
 
-        <!-- Declaración de WelcomeActivity -->
         <activity
             android:name=".WelcomeActivity"
             android:exported="true">
@@ -24,7 +24,6 @@
             </intent-filter>
         </activity>
 
-        <!-- Declaración de Activies -->
         <activity android:name=".login.LogInActivity" />
         <activity android:name=".login.RegisterActivity" />
         <activity android:name=".MainActivity"/>
@@ -32,11 +31,10 @@
         <activity android:name=".perfil.ConfigurationActivity"/>
         <activity android:name=".perfil.ReviewActivity"/>
         <activity android:name=".tienda.StoreActivity"/>
-        <activity android:name=".catalogo.InspiracionActivity" android:theme="@style/DialogActivityTheme"/>
         <activity android:name=".citas.PedirCitaActivity" />
         <activity
             android:name=".tienda.CartActivity"
-            android:exported="true"> <!-- Esto permite que otras apps accedan a la actividad si es necesario -->
+            android:exported="true"> <!-- Acceso a otras apps -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -47,6 +45,17 @@
         <activity android:name=".tienda.PaymentResultActivity" />
         <activity android:name=".perfil.HistorialCitasActivity" />
         <activity android:name=".admin.AdminActivity" />
+        <activity android:name=".admin.catalogo.CatalogoAdminActivity" />
+        <activity android:name=".admin.citas.CitasAdminActivity" />
+        <activity android:name=".admin.productos.ProductsAdminActivity" />
+        <activity android:name=".admin.usuarios.UsersAdminActivity" />
+        <activity android:name=".admin.productos.AddProduct" />
+        <activity android:name=".admin.productos.EditProduct" />
+        <activity android:name=".admin.catalogo.AddDesignActivity" />
+        <activity android:name=".admin.usuarios.ViewUserActivity" />
+        <activity android:name=".admin.usuarios.ViewUserAppointmentsActivity" />
+
+
 
 
 

@@ -1,6 +1,5 @@
 package com.espparki.molisnail.catalogo;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,6 +13,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.espparki.molisnail.R;
+import com.espparki.molisnail.admin.catalogo.Design;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -22,8 +22,8 @@ import java.util.List;
 
 public class CatalogoFragment extends Fragment {
     private RecyclerView recyclerView;
-    private CatalogoAdapter adapter;
-    private List<Nail> catalogoList = new ArrayList<>();
+    private NailAdapter adapter;
+    private List<Design> designList = new ArrayList<>();
     private FirebaseFirestore db;
 
     @Nullable
@@ -36,28 +36,32 @@ public class CatalogoFragment extends Fragment {
 
         db = FirebaseFirestore.getInstance();
 
-        // Configura el adaptador y establece el RecyclerView
-        adapter = new CatalogoAdapter(catalogoList, product -> {
-            // Lógica para abrir la nueva Activity de inspiración
-            Intent intent = new Intent(getActivity(), InspiracionActivity.class);
-            startActivity(intent);
-        });
+        adapter = new NailAdapter(designList);
         recyclerView.setAdapter(adapter);
 
-        loadNailsFromFirebase();  // Cargar productos (método para cargar datos de Firebase)
+        loadDesignsFromFirebase();
         return view;
     }
 
-
-    private void loadNailsFromFirebase() {
-        db.collection("nails").get().addOnSuccessListener(queryDocumentSnapshots -> {
-            for (DocumentSnapshot document : queryDocumentSnapshots) {
-                Nail nail = document.toObject(Nail.class);  // Asegúrate de tener una clase modelo Nail
-                catalogoList.add(nail);
-            }
-            adapter.notifyDataSetChanged();
-        }).addOnFailureListener(e -> {
-            Log.e("Firebase", "Error al cargar las uñas", e);
-        });
+    private void loadDesignsFromFirebase() {
+        db.collection("designs")
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    designList.clear();
+                    Log.d("CatalogoFragment", "Documentos obtenidos: " + queryDocumentSnapshots.size());
+                    for (DocumentSnapshot document : queryDocumentSnapshots) {
+                        Design design = document.toObject(Design.class);
+                        if (design != null) {
+                            design.setId(document.getId());
+                            Log.d("CatalogoFragment", "Diseño añadido: ID=" + design.getId() + ", Imagen Base64=" +
+                                    (design.getImagenBase64() != null ? design.getImagenBase64().substring(0, Math.min(design.getImagenBase64().length(), 50)) : "NULO"));
+                            designList.add(design);
+                        } else {
+                            Log.e("CatalogoFragment", "Error al mapear un documento");
+                        }
+                    }
+                    adapter.notifyDataSetChanged();
+                })
+                .addOnFailureListener(e -> Log.e("Firebase", "Error al cargar los diseños", e));
     }
 }

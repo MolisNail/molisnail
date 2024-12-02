@@ -32,33 +32,24 @@ public class ConfigurationActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.perfil_activity_configuration);
-
-        // Inicializar Firebase
         auth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
-
-        // Inicializar vistas
         nameEditText = findViewById(R.id.nameEditText);
         shippingAddressEditText = findViewById(R.id.shippingAddressEditText);
         changeProfilePhotoButton = findViewById(R.id.changeProfilePhotoButton);
         resetProfilePhotoButton = findViewById(R.id.resetProfilePhotoButton);
         saveButton = findViewById(R.id.saveButton);
         viewHistoryButton = findViewById(R.id.viewHistoryButton);
-
-        // Cargar datos de usuario
         loadUserData();
-
-        // Cambiar foto de perfil
         changeProfilePhotoButton.setOnClickListener(v -> openImagePicker());
-
-        // Resetear foto de perfil
         resetProfilePhotoButton.setOnClickListener(v -> resetProfilePhoto());
-
-        // Guardar datos
         saveButton.setOnClickListener(v -> saveUserData());
-
-        // Ver historial de citas
         viewHistoryButton.setOnClickListener(v -> openHistorialCitas());
+
+        findViewById(R.id.btnBack).setOnClickListener(v -> {
+            finish();
+        });
+
     }
 
     private void loadUserData() {
@@ -99,14 +90,10 @@ public class ConfigurationActivity extends AppCompatActivity {
                         String photoToSet;
 
                         if (googlePhotoUrl != null && !googlePhotoUrl.isEmpty()) {
-                            // Usar la foto de Google si existe
                             photoToSet = googlePhotoUrl;
                         } else {
-                            // Usar la foto predeterminada
                             photoToSet = "android.resource://" + getPackageName() + "/" + R.drawable.ic_default_profile_picture;
                         }
-
-                        // Actualizar Firestore y UI
                         db.collection("usuarios").document(userId)
                                 .update("photo", photoToSet)
                                 .addOnSuccessListener(aVoid -> {

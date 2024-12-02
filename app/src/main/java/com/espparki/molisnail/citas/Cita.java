@@ -9,7 +9,7 @@ public class Cita {
     private String fecha;
     private String hora;
     private String servicio;
-    private String id; // ID del documento en Firestore
+    private String id;
     private String userId;
 
     public Cita(String fecha, String hora, String servicio, String id, String userId) {

@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     android:padding="16dp">
 
-    <!-- Título "Mis citas" -->
     <TextView
         android:id="@+id/tvMisCitas"
         android:layout_width="wrap_content"
@@ -18,7 +17,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"/>
 
-    <!-- Mensaje de próxima cita o "No tienes citas actualmente" -->
     <TextView
         android:id="@+id/tvProximaCita"
         android:layout_width="wrap_content"
@@ -29,7 +27,6 @@
         app:layout_constraintTop_toBottomOf="@id/tvMisCitas"
         app:layout_constraintStart_toStartOf="parent"/>
 
-    <!-- Línea separadora -->
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
@@ -38,7 +35,6 @@
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginTop="16dp"/>
 
-    <!-- Calendario para mostrar las citas del mes -->
     <CalendarView
         android:id="@+id/calendarView"
         android:layout_width="match_parent"
@@ -50,7 +46,6 @@
         android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"/>
 
-    <!-- Botón para pedir citas -->
     <Button
         android:id="@+id/btnPedirCita"
         android:layout_width="0dp"
@@ -64,7 +59,6 @@
         android:layout_marginEnd="8dp"
         android:layout_marginTop="16dp" />
 
-    <!-- Botón para ver citas -->
     <Button
         android:id="@+id/btnVerMisCitas"
         android:layout_width="0dp"

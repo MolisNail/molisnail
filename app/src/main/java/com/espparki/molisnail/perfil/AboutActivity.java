@@ -11,8 +11,9 @@ public class AboutActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // Establecer el layout
         setContentView(R.layout.perfil_activity_about);
+        findViewById(R.id.btnBack).setOnClickListener(v -> {
+            finish();
+        });
     }
 }

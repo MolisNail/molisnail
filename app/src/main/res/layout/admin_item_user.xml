@@ -1,0 +1,65 @@
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    android:background="@color/light_background_main">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:background="@color/light_background_main">
+
+        <ImageView
+            android:id="@+id/ivUserPhoto"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginStart="8dp"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvUserEmail"
+            android:layout_width="242dp"
+            android:layout_height="25dp"
+            android:layout_marginStart="16dp"
+            android:text="user@example.com"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="@id/ivUserPhoto"
+            app:layout_constraintEnd_toStartOf="@+id/btnViewUser"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@id/ivUserPhoto"
+            app:layout_constraintTop_toTopOf="@id/ivUserPhoto"
+            app:layout_constraintVertical_bias="0.0"
+            android:textColor="@color/dark_background_main"/>
+
+        <Button
+            android:id="@+id/btnViewUser"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="44dp"
+            android:layout_marginTop="9dp"
+            android:text="Ver"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/ivUserPhoto"
+            app:layout_constraintTop_toBottomOf="@+id/tvUserEmail"
+            android:backgroundTint="@color/dark_background_main"
+            android:textColor="@color/light_background_main"/>
+
+        <Button
+            android:id="@+id/btnDeleteUser"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="0dp"
+            android:text="Eliminar"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/btnViewUser"
+            android:backgroundTint="@android:color/holo_red_light"
+            android:textColor="@color/light_background_main"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>

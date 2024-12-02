@@ -6,7 +6,6 @@ public class Review {
     private float rating;
 
     public Review() {
-        // Constructor vacío requerido por Firestore
     }
 
     public Review(String userId, String review, float rating) {

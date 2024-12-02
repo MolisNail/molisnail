@@ -36,6 +36,9 @@ public class HistorialCitasActivity extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
 
         loadHistorialCitas();
+        findViewById(R.id.btnBack).setOnClickListener(v -> {
+            finish();
+        });
     }
 
     private void loadHistorialCitas() {
@@ -59,7 +62,6 @@ public class HistorialCitasActivity extends AppCompatActivity {
                     recyclerView.setAdapter(adapter);
                 })
                 .addOnFailureListener(e -> {
-                    // Manejo del error
                 });
     }
 }

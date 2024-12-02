@@ -16,7 +16,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class CartActivity extends AppCompatActivity {
@@ -25,7 +24,6 @@ public class CartActivity extends AppCompatActivity {
     private FirebaseAuth auth;
     private RecyclerView recyclerView;
     private CartAdapter adapter;
-    private List<CartItem> cartItems = new ArrayList<>();
     private TextView totalPriceTextView;
     private Button proceedToPaymentButton;
     private double totalPrice = 0.0;
@@ -43,7 +41,7 @@ public class CartActivity extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
 
-        adapter = new CartAdapter(cartItems, new CartAdapter.OnCartItemChangeListener() {
+        adapter = new CartAdapter(CartDataHolder.getInstance().getCartItems(), new CartAdapter.OnCartItemChangeListener() {
             @Override
             public void onQuantityChange(CartItem item, int newQuantity) {
                 updateCartItem(item, newQuantity);
@@ -64,8 +62,9 @@ public class CartActivity extends AppCompatActivity {
 
         loadCartItems();
 
-        // Configurar el botón "Proceder al pago" con la lógica de pago
         proceedToPaymentButton.setOnClickListener(v -> proceedToPayment());
+
+        findViewById(R.id.btnBack).setOnClickListener(v -> finish());
     }
 
     private void loadCartItems() {
@@ -73,13 +72,13 @@ public class CartActivity extends AppCompatActivity {
         db.collection("usuarios").document(userId).collection("carrito")
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
+                    List<CartItem> cartItems = CartDataHolder.getInstance().getCartItems();
                     cartItems.clear();
                     totalPrice = 0.0;
                     for (DocumentSnapshot document : queryDocumentSnapshots) {
                         CartItem item = document.toObject(CartItem.class);
                         item.setId(document.getId());
 
-                        // Cargar la imagen desde Firestore
                         db.collection("productos").document(item.getId())
                                 .get()
                                 .addOnSuccessListener(productDoc -> {
@@ -104,7 +103,7 @@ public class CartActivity extends AppCompatActivity {
                 .update("quantity", newQuantity)
                 .addOnSuccessListener(aVoid -> {
                     totalPrice = 0.0;
-                    for (CartItem cartItem : cartItems) {
+                    for (CartItem cartItem : CartDataHolder.getInstance().getCartItems()) {
                         totalPrice += cartItem.getPrecio() * cartItem.getQuantity();
                     }
                     updateTotalPrice();
@@ -117,10 +116,10 @@ public class CartActivity extends AppCompatActivity {
                 .document(item.getId())
                 .delete()
                 .addOnSuccessListener(aVoid -> {
-                    cartItems.remove(item);
+                    CartDataHolder.getInstance().getCartItems().remove(item);
                     adapter.notifyDataSetChanged();
                     totalPrice = 0.0;
-                    for (CartItem cartItem : cartItems) {
+                    for (CartItem cartItem : CartDataHolder.getInstance().getCartItems()) {
                         totalPrice += cartItem.getPrecio() * cartItem.getQuantity();
                     }
                     updateTotalPrice();
@@ -141,7 +140,7 @@ public class CartActivity extends AppCompatActivity {
             @Override
             public void onPaymentSuccess(String paymentId) {
                 Toast.makeText(CartActivity.this, "Pago realizado con éxito. ID: " + paymentId, Toast.LENGTH_LONG).show();
-                clearCart(); // Limpiar el carrito al completar el pago
+                clearCart();
                 openPaymentResultActivity(paymentId);
             }
 
@@ -162,7 +161,7 @@ public class CartActivity extends AppCompatActivity {
                         db.collection("usuarios").document(userId).collection("carrito")
                                 .document(document.getId()).delete();
                     }
-                    cartItems.clear();
+                    CartDataHolder.getInstance().clearCart();
                     adapter.notifyDataSetChanged();
                     totalPrice = 0.0;
                     updateTotalPrice();
@@ -171,7 +170,6 @@ public class CartActivity extends AppCompatActivity {
 
     private void openPaymentResultActivity(String paymentId) {
         Intent intent = new Intent(CartActivity.this, PaymentResultActivity.class);
-        intent.putParcelableArrayListExtra("cart_items", new ArrayList<>(cartItems));
         intent.putExtra("payment_id", paymentId);
         startActivity(intent);
     }

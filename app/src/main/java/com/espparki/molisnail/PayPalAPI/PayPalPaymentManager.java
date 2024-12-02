@@ -8,16 +8,14 @@ import retrofit2.Response;
 
 public class PayPalPaymentManager {
     public static void createPayment(String amount, String currency, PayPalPaymentCallback callback) {
-        // Asegurarse de que el valor del monto esté en el formato correcto
         String formattedAmount = amount.replace(",", ".");
-
         PayPalTokenManager.getAccessToken(new PayPalTokenManager.PayPalTokenCallback() {
             @Override
             public void onTokenReceived(String token) {
                 PayPalApi api = PayPalService.getRetrofitInstance().create(PayPalApi.class);
                 PaymentRequest request = new PaymentRequest(
                         "CAPTURE",
-                        new PurchaseUnit[]{new PurchaseUnit(new Amount(currency, formattedAmount), "Producto")}
+                        new PurchaseUnit[]{new PurchaseUnit(new Amount(currency, formattedAmount), "Productos")}
                 );
 
                 Call<PaymentResponse> call = api.createPayment(token, request);

@@ -9,7 +9,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="8dp">
+        android:padding="8dp"
+        android:background="@color/light_background_main">
 
         <!-- Imagen del producto -->
         <ImageView
@@ -33,7 +34,8 @@
                 android:layout_height="wrap_content"
                 android:text="Nombre del producto"
                 android:textSize="16sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:textColor="@color/dark_background_main"/>
 
             <!-- Cantidad -->
             <TextView
@@ -42,7 +44,8 @@
                 android:layout_height="wrap_content"
                 android:text="Cantidad"
                 android:textSize="14sp"
-                android:layout_marginTop="4dp" />
+                android:layout_marginTop="4dp"
+                android:textColor="@color/dark_background_main"/>
         </LinearLayout>
     </LinearLayout>
 </androidx.cardview.widget.CardView>

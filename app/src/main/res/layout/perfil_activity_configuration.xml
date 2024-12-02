@@ -6,7 +6,6 @@
     android:padding="16dp"
     android:background="@color/light_background_main">
 
-    <!-- Título -->
     <TextView
         android:id="@+id/accountTitleTextView"
         android:layout_width="wrap_content"
@@ -20,9 +19,6 @@
         app:layout_constraintTop_toTopOf="parent"
         android:textColor="@color/dark_background_main"/>
 
-    <!-- Texto Nombre Completo -->
-
-    <!-- Campo Nombre Completo -->
     <TextView
         android:id="@+id/textView5"
         android:layout_width="wrap_content"
@@ -45,9 +41,6 @@
         android:layout_marginTop="8dp"
         android:textColor="@color/black"/>
 
-    <!-- Botón Cambiar Foto -->
-
-    <!-- Botón Resetear Foto -->
     <Button
         android:id="@+id/changeProfilePhotoButton"
         android:layout_width="0dp"
@@ -61,8 +54,6 @@
         app:layout_constraintTop_toBottomOf="@id/nameEditText"
         android:textColor="@color/light_background_main"/>
 
-
-    <!-- Texto Dirección de Envío -->
     <Button
         android:id="@+id/resetProfilePhotoButton"
         android:layout_width="0dp"
@@ -76,7 +67,6 @@
         app:layout_constraintTop_toBottomOf="@id/nameEditText"
         android:textColor="@color/light_background_main"/>
 
-    <!-- Campo Dirección de Envío -->
     <TextView
         android:id="@+id/textView7"
         android:layout_width="wrap_content"
@@ -100,7 +90,6 @@
         android:layout_marginTop="8dp"
         android:textColor="@color/black"/>
 
-    <!-- Botón Guardar Cambios -->
     <Button
         android:id="@+id/saveButton"
         android:layout_width="match_parent"
@@ -113,7 +102,6 @@
         android:layout_marginTop="16dp"
         android:textColor="@color/light_background_main"/>
 
-    <!-- Botón Ver Historial de Citas -->
     <Button
         android:id="@+id/viewHistoryButton"
         android:layout_width="match_parent"
@@ -125,6 +113,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/saveButton"
         android:textColor="@color/light_background_main"/>
+    <Button
+        android:id="@+id/btnBack"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_gravity="center_horizontal"
+        android:text="Volver"
+        android:backgroundTint="@color/dark_background_main"
+        android:textColor="@color/light_background_main"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

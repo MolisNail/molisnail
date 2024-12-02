@@ -47,14 +47,24 @@ public class PedirCitaActivity extends AppCompatActivity {
         btnSelectDate = findViewById(R.id.selectDateButton);
         btnConfirmCita = findViewById(R.id.btnConfirmCita);
 
+        initializeSpinners();
+
         btnSelectDate.setOnClickListener(v -> showDatePicker());
         btnConfirmCita.setOnClickListener(v -> confirmCita());
 
-        initializeServices();
+        findViewById(R.id.btnBack).setOnClickListener(v -> finish());
     }
 
-    private void initializeServices() {
-        List<String> services = Arrays.asList("Manicura", "Pedicura", "Uñas Acrílicas", "Uñas de Gel", "Decoración de Uñas");
+    private void initializeSpinners() {
+        List<String> initialTimeList = new ArrayList<>();
+        initialTimeList.add("Seleccionar una fecha");
+        ArrayAdapter<String> timeAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, initialTimeList);
+        timeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        timeSpinner.setAdapter(timeAdapter);
+
+        List<String> services = new ArrayList<>();
+        services.add("Seleccionar un servicio");
+        services.addAll(Arrays.asList("Manicura", "Pedicura", "Uñas Acrílicas", "Uñas de Gel", "Decoración de Uñas"));
         ArrayAdapter<String> serviceAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, services);
         serviceAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         serviceSpinner.setAdapter(serviceAdapter);
@@ -98,6 +108,8 @@ public class PedirCitaActivity extends AppCompatActivity {
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
             selectedDateStr = dateFormat.format(selectedCalendar.getTime());
 
+            btnSelectDate.setText(selectedDateStr);
+
             checkAvailableTimes(selectedDateStr, new ArrayList<>(Arrays.asList(
                     "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30",
                     "15:00", "15:30", "16:00", "16:30"
@@ -119,41 +131,43 @@ public class PedirCitaActivity extends AppCompatActivity {
                         }
                     }
 
+                    times.add(0, "Seleccionar una hora"); // Añadir mensaje predeterminado al principio
                     ArrayAdapter<String> timeAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, times);
                     timeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     timeSpinner.setAdapter(timeAdapter);
                 })
                 .addOnFailureListener(e -> Toast.makeText(this, "Error al verificar disponibilidad", Toast.LENGTH_SHORT).show());
     }
+
     private void confirmCita() {
         String selectedTime = (String) timeSpinner.getSelectedItem();
         String selectedService = (String) serviceSpinner.getSelectedItem();
-
-        // Obtiene el userId del usuario autenticado
         String userId = auth.getCurrentUser() != null ? auth.getCurrentUser().getUid() : null;
 
-        if (selectedDateStr != null && selectedTime != null && selectedService != null && userId != null) {
-            int puntosASumar = getPuntosPorServicio(selectedService);
+        if (selectedDateStr != null && selectedTime != null && selectedService != null
+                && !selectedTime.equals("Seleccionar una hora")
+                && !selectedService.equals("Seleccionar un servicio")
+                && userId != null) {
 
-            // Crea un objeto Cita sin el ID (se generará en Firestore)
+            int puntosASumar = getPuntosPorServicio(selectedService);
             Cita cita = new Cita(selectedDateStr, selectedTime, selectedService, null, userId);
 
             db.collection("citas").add(cita)
                     .addOnSuccessListener(documentReference -> {
-                        // Actualiza los puntos en Firestore
                         db.collection("usuarios").document(userId)
                                 .update("puntos", FieldValue.increment(puntosASumar))
                                 .addOnSuccessListener(aVoid -> {
                                     Toast.makeText(this, "Cita confirmada. Puntos añadidos.", Toast.LENGTH_SHORT).show();
-                                    finish(); // Finaliza la actividad actual y regresa a la anterior
+                                    finish();
                                 })
                                 .addOnFailureListener(e -> Toast.makeText(this, "Error al actualizar los puntos", Toast.LENGTH_SHORT).show());
                     })
                     .addOnFailureListener(e -> Toast.makeText(this, "Error al confirmar la cita", Toast.LENGTH_SHORT).show());
         } else {
-            Toast.makeText(this, "Por favor, selecciona una fecha, hora y servicio", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Por favor, selecciona una fecha, hora y servicio válidos", Toast.LENGTH_SHORT).show();
         }
     }
+
     private int getPuntosPorServicio(String servicio) {
         switch (servicio) {
             case "Manicura":
@@ -170,22 +184,4 @@ public class PedirCitaActivity extends AppCompatActivity {
                 return 0;
         }
     }
-
-    private void sumarPuntosUsuario(String userId, int puntos) {
-        db.collection("usuarios").document(userId)
-                .get()
-                .addOnSuccessListener(documentSnapshot -> {
-                    Long puntosActuales = documentSnapshot.getLong("puntos");
-                    if (puntosActuales == null) puntosActuales = 0L;
-
-                    db.collection("usuarios").document(userId)
-                            .update("puntos", puntosActuales + puntos)
-                            .addOnSuccessListener(aVoid -> {
-                                Toast.makeText(this, "Puntos actualizados", Toast.LENGTH_SHORT).show();
-                            })
-                            .addOnFailureListener(e -> Toast.makeText(this, "Error al actualizar puntos", Toast.LENGTH_SHORT).show());
-                })
-                .addOnFailureListener(e -> Toast.makeText(this, "Error al obtener puntos actuales", Toast.LENGTH_SHORT).show());
-    }
-
 }

@@ -8,99 +8,102 @@
     android:padding="16dp"
     android:background="#bf8fbf">
 
-    <!-- Selección de Fecha -->
-
-    <!-- Botón para abrir el selector de fecha -->
-
-    <!-- Selección de Hora -->
-
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="100dp"
         android:text="Fecha"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/white"
         app:layout_constraintTop_toTopOf="parent"
-        android:textColor="@color/white"/>
-
-    <!-- Spinner para las horas disponibles -->
-
-    <!-- Selección de Servicio -->
-
-    <!-- Botón para confirmar la cita -->
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="24dp" />
 
     <Button
         android:id="@+id/selectDateButton"
-        android:layout_width="275dp"
-        android:layout_height="51dp"
-        android:layout_marginTop="36dp"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
         android:text="Seleccionar fecha"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:backgroundTint="@color/dark_background_main"
+        android:textColor="@android:color/white"
+        app:layout_constraintTop_toBottomOf="@id/textView"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView"
-        android:backgroundTint="@color/dark_background_main"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp" />
 
     <TextView
+        android:id="@+id/textViewHora"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="12dp"
         android:text="Hora"
-        android:textColor="@color/white"
-        app:layout_constraintBottom_toTopOf="@+id/spinnerTime"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/white"
+        app:layout_constraintTop_toBottomOf="@id/selectDateButton"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/selectDateButton"
-        app:layout_constraintVertical_bias="0.666" />
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp" />
 
     <Spinner
         android:id="@+id/spinnerTime"
-        android:layout_width="282dp"
-        android:layout_height="40dp"
-        android:layout_marginBottom="20dp"
-        app:layout_constraintBottom_toTopOf="@+id/textView4"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
         android:backgroundTint="@color/dark_background_main"
-
-        />
+        android:padding="8dp"
+        app:layout_constraintTop_toBottomOf="@id/textViewHora"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="8dp" />
 
     <TextView
-        android:id="@+id/textView4"
+        android:id="@+id/textViewService"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="36dp"
         android:text="Tipo de servicio"
-        app:layout_constraintBottom_toTopOf="@+id/spinnerService"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/white"
+        app:layout_constraintTop_toBottomOf="@id/spinnerTime"
         app:layout_constraintStart_toStartOf="parent"
-        android:textColor="@color/white"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp" />
 
     <Spinner
         android:id="@+id/spinnerService"
-        android:layout_width="294dp"
-        android:layout_height="43dp"
-        android:layout_marginBottom="108dp"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
         android:entries="@array/services_array"
-        app:layout_constraintBottom_toTopOf="@+id/btnConfirmCita"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.601"
+        android:backgroundTint="@color/dark_background_main"
+        android:padding="8dp"
+        app:layout_constraintTop_toBottomOf="@id/textViewService"
         app:layout_constraintStart_toStartOf="parent"
-        android:backgroundTint="@color/dark_background_main"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="8dp" />
 
     <Button
         android:id="@+id/btnConfirmCita"
-        android:layout_width="256dp"
-        android:layout_height="48dp"
-        android:layout_marginBottom="100dp"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
         android:text="Confirmar cita"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:backgroundTint="@color/dark_background_main"
+        android:textColor="@android:color/white"
+        app:layout_constraintTop_toBottomOf="@id/spinnerService"
         app:layout_constraintStart_toStartOf="parent"
-        android:backgroundTint="@color/dark_background_main"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="32dp" />
+
+    <Button
+        android:id="@+id/btnBack"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:text="Volver"
+        android:backgroundTint="@color/dark_background_main"
+        android:textColor="@android:color/white"
+        app:layout_constraintTop_toBottomOf="@id/btnConfirmCita"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

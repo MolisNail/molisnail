@@ -35,27 +35,19 @@ public class MainActivity extends AppCompatActivity implements OnDataUpdateListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        // Inicializa Firebase Auth y Firestore
+        setContentView(R.layout.main_activity_main);
         auth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
-
-        // Inicializa el Toolbar y los elementos del layout
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         profileImage = findViewById(R.id.profileImage);
-        levelTextView = findViewById(R.id.textRight);  // Texto del nivel
-        levelProgressBar = findViewById(R.id.level_progress_bar); // Barra de progreso del nivel
-
-        // Cargar los datos del usuario
+        levelTextView = findViewById(R.id.textRight);
+        levelProgressBar = findViewById(R.id.level_progress_bar);
         loadUserData();
 
 
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
         bottomNav.setOnNavigationItemSelectedListener(navListener);
-
-        // Cargar el fragmento inicial (HomeFragment) si no hay estado guardado
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, new HomeFragment()).commit();
@@ -104,8 +96,6 @@ public class MainActivity extends AppCompatActivity implements OnDataUpdateListe
     public void updateUserData() {
         loadUserData();
     }
-
-    // Función para cargar los datos del usuario desde Firestore
     public void loadUserData() {
         FirebaseUser user = auth.getCurrentUser();
 
@@ -114,25 +104,19 @@ public class MainActivity extends AppCompatActivity implements OnDataUpdateListe
                     .get()
                     .addOnSuccessListener(documentSnapshot -> {
                         if (documentSnapshot.exists()) {
-                            // Cargar la imagen del perfil
                             String photoUrl = documentSnapshot.getString("photo");
                             if (photoUrl != null) {
                                 Uri photoUri = Uri.parse(photoUrl);
-                                Glide.with(this).load(photoUri).into(profileImage); // Cargar imagen con Glide
+                                Glide.with(this).load(photoUri).into(profileImage);
                             } else {
-                                profileImage.setImageResource(R.drawable.ic_default_profile_picture); // Imagen predeterminada
+                                profileImage.setImageResource(R.drawable.ic_default_profile_picture);
                             }
 
-                            // Verificar y calcular el nivel del usuario según los puntos
                             Long puntosLong = documentSnapshot.getLong("puntos");
                             int puntos = (puntosLong != null) ? puntosLong.intValue() : 0;
                             String nivel = calcularNivel(puntos);
-
-                            // Actualizar el nivel en Firestore si es necesario
                             db.collection("usuarios").document(user.getUid())
                                     .update("nivel", nivel);
-
-                            // Actualizar el nivel y puntos en el toolbar
                             levelTextView.setText("Nivel " + nivel);
                             setupProgressBar(nivel, puntos);
                         }
@@ -140,8 +124,6 @@ public class MainActivity extends AppCompatActivity implements OnDataUpdateListe
                     .addOnFailureListener(e -> Log.w("Firestore", "Error al obtener los datos del usuario.", e));
         }
     }
-
-    // Método para determinar el nivel del usuario
     private String calcularNivel(int puntos) {
         if (puntos >= 300) {
             return "gold";
@@ -152,21 +134,16 @@ public class MainActivity extends AppCompatActivity implements OnDataUpdateListe
         }
     }
 
-    // Configura la barra de progreso en el toolbar según el nivel y los puntos
-
-
-
-    // Configura la barra de progreso según el nivel
     private void setupProgressBar(String nivel, int puntos) {
         if (nivel.equals("bronze")) {
             levelProgressBar.setMax(100);
             levelProgressBar.setProgress(puntos);
         } else if (nivel.equals("silver")) {
-            levelProgressBar.setMax(200); // Puntos necesarios para alcanzar gold
-            levelProgressBar.setProgress(puntos - 100); // Restar los puntos acumulados en bronze
+            levelProgressBar.setMax(200);
+            levelProgressBar.setProgress(puntos - 100);
         } else if (nivel.equals("gold")) {
-            levelProgressBar.setMax(500); // Límite para el progreso en gold
-            levelProgressBar.setProgress(puntos - 300); // Restar los puntos acumulados en silver
+            levelProgressBar.setMax(500);
+            levelProgressBar.setProgress(puntos - 300);
         }
     }
 

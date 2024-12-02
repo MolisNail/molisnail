@@ -10,6 +10,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.espparki.molisnail.R;
 
 import java.util.List;
@@ -55,9 +57,13 @@ public class PaymentResultAdapter extends RecyclerView.Adapter<PaymentResultAdap
             productName.setText(item.getNombre());
             productQuantity.setText(String.format("Cantidad: %d", item.getQuantity()));
 
-            // Cargar la imagen usando Glide
             Glide.with(itemView.getContext())
                     .load(item.getImagen())
+                    .apply(new RequestOptions()
+                            .override(200, 200)
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)
+                            .placeholder(R.drawable.garras_icon)
+                            .error(R.drawable.garras_icon))
                     .into(productImage);
         }
     }
