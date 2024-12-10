@@ -19,14 +19,17 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.List;
 
 public class CartActivity extends AppCompatActivity {
-
     private FirebaseFirestore db;
     private FirebaseAuth auth;
     private RecyclerView recyclerView;
     private CartAdapter adapter;
     private TextView totalPriceTextView;
     private Button proceedToPaymentButton;
-    private double totalPrice = 0.0;
+    private static double totalPrice = 0.0;
+
+    public static double getTotalPrice(){
+        return totalPrice;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,11 +62,9 @@ public class CartActivity extends AppCompatActivity {
         });
 
         recyclerView.setAdapter(adapter);
-
         loadCartItems();
 
         proceedToPaymentButton.setOnClickListener(v -> proceedToPayment());
-
         findViewById(R.id.btnBack).setOnClickListener(v -> finish());
     }
 
@@ -78,7 +79,6 @@ public class CartActivity extends AppCompatActivity {
                     for (DocumentSnapshot document : queryDocumentSnapshots) {
                         CartItem item = document.toObject(CartItem.class);
                         item.setId(document.getId());
-
                         db.collection("productos").document(item.getId())
                                 .get()
                                 .addOnSuccessListener(productDoc -> {
@@ -87,7 +87,6 @@ public class CartActivity extends AppCompatActivity {
                                         adapter.notifyDataSetChanged();
                                     }
                                 });
-
                         cartItems.add(item);
                         totalPrice += item.getPrecio() * item.getQuantity();
                     }
@@ -96,37 +95,11 @@ public class CartActivity extends AppCompatActivity {
                 });
     }
 
-    private void updateCartItem(CartItem item, int newQuantity) {
-        String userId = auth.getCurrentUser().getUid();
-        db.collection("usuarios").document(userId).collection("carrito")
-                .document(item.getId())
-                .update("quantity", newQuantity)
-                .addOnSuccessListener(aVoid -> {
-                    totalPrice = 0.0;
-                    for (CartItem cartItem : CartDataHolder.getInstance().getCartItems()) {
-                        totalPrice += cartItem.getPrecio() * cartItem.getQuantity();
-                    }
-                    updateTotalPrice();
-                });
-    }
-
-    private void removeCartItem(CartItem item) {
-        String userId = auth.getCurrentUser().getUid();
-        db.collection("usuarios").document(userId).collection("carrito")
-                .document(item.getId())
-                .delete()
-                .addOnSuccessListener(aVoid -> {
-                    CartDataHolder.getInstance().getCartItems().remove(item);
-                    adapter.notifyDataSetChanged();
-                    totalPrice = 0.0;
-                    for (CartItem cartItem : CartDataHolder.getInstance().getCartItems()) {
-                        totalPrice += cartItem.getPrecio() * cartItem.getQuantity();
-                    }
-                    updateTotalPrice();
-                });
-    }
-
     private void updateTotalPrice() {
+        totalPrice = 0.0;
+        for (CartItem item : CartDataHolder.getInstance().getCartItems()) {
+            totalPrice += item.getPrecio() * item.getQuantity();
+        }
         totalPriceTextView.setText(String.format("Total: %.2f€", totalPrice));
     }
 
@@ -136,7 +109,9 @@ public class CartActivity extends AppCompatActivity {
             return;
         }
 
-        PayPalPaymentManager.createPayment(String.format("%.2f", totalPrice), "EUR", new PayPalPaymentManager.PayPalPaymentCallback() {
+        PayPalPaymentManager paymentManager = new PayPalPaymentManager(this);
+        paymentManager.createPayment(String.format("%.2f", totalPrice), "EUR", new PayPalPaymentManager.PayPalPaymentCallback() {
+
             @Override
             public void onPaymentSuccess(String paymentId) {
                 Toast.makeText(CartActivity.this, "Pago realizado con éxito. ID: " + paymentId, Toast.LENGTH_LONG).show();
@@ -148,6 +123,13 @@ public class CartActivity extends AppCompatActivity {
             public void onPaymentError(Exception e) {
                 Toast.makeText(CartActivity.this, "Error al realizar el pago: " + e.getMessage(), Toast.LENGTH_LONG).show();
                 e.printStackTrace();
+            }
+
+            @Override
+            public void onPaymentRedirect(String approveUrl) {
+                Intent intent = new Intent(CartActivity.this, PaymentWebViewActivity.class);
+                intent.putExtra(PaymentWebViewActivity.EXTRA_URL, approveUrl);
+                startActivity(intent);
             }
         });
     }
@@ -165,6 +147,36 @@ public class CartActivity extends AppCompatActivity {
                     adapter.notifyDataSetChanged();
                     totalPrice = 0.0;
                     updateTotalPrice();
+                });
+    }
+
+    private void removeCartItem(CartItem item) {
+        String userId = auth.getCurrentUser().getUid();
+        db.collection("usuarios").document(userId).collection("carrito")
+                .document(item.getId())
+                .delete()
+                .addOnSuccessListener(aVoid -> {
+                    CartDataHolder.getInstance().getCartItems().remove(item);
+                    adapter.notifyDataSetChanged();
+                    updateTotalPrice();
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(CartActivity.this, "Error al eliminar el artículo: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
+    }
+
+    private void updateCartItem(CartItem item, int newQuantity) {
+        String userId = auth.getCurrentUser().getUid();
+        db.collection("usuarios").document(userId).collection("carrito")
+                .document(item.getId())
+                .update("quantity", newQuantity)
+                .addOnSuccessListener(aVoid -> {
+                    item.setQuantity(newQuantity);
+                    adapter.notifyDataSetChanged();
+                    updateTotalPrice();
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(CartActivity.this, "Error al actualizar el artículo: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
     }
 

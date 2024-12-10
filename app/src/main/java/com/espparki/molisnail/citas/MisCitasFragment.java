@@ -21,6 +21,14 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Properties;
+
+import javax.mail.Message;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 
 public class MisCitasFragment extends Fragment {
 
@@ -94,16 +102,60 @@ public class MisCitasFragment extends Fragment {
                 .addOnSuccessListener(aVoid -> {
                     int puntosARestar = getPuntosPorServicio(cita.getServicio());
                     db.collection("usuarios").document(cita.getUserId())
-                            .update("puntos", FieldValue.increment(-puntosARestar))
-                            .addOnSuccessListener(aVoid2 -> {
-                                citasList.remove(cita);
-                                adapter.notifyDataSetChanged();
-                                Toast.makeText(getContext(), "Cita eliminada. Puntos descontados.", Toast.LENGTH_SHORT).show();
+                            .get()
+                            .addOnSuccessListener(documentSnapshot -> {
+                                String userEmail = documentSnapshot.getString("email");
+
+                                db.collection("usuarios").document(cita.getUserId())
+                                        .update("puntos", FieldValue.increment(-puntosARestar))
+                                        .addOnSuccessListener(aVoid2 -> {
+                                            citasList.remove(cita);
+                                            adapter.notifyDataSetChanged();
+                                            Toast.makeText(getContext(), "Cita eliminada. Puntos descontados.", Toast.LENGTH_SHORT).show();
+                                            sendCancellationEmail(userEmail, cita);
+                                        })
+                                        .addOnFailureListener(e -> Toast.makeText(getContext(), "Error al actualizar los puntos", Toast.LENGTH_SHORT).show());
                             })
-                            .addOnFailureListener(e -> Toast.makeText(getContext(), "Error al actualizar los puntos", Toast.LENGTH_SHORT).show());
+                            .addOnFailureListener(e -> Toast.makeText(getContext(), "Error al obtener el correo del usuario", Toast.LENGTH_SHORT).show());
                 })
                 .addOnFailureListener(e -> Toast.makeText(getContext(), "Error al eliminar cita", Toast.LENGTH_SHORT).show());
     }
+
+    private void sendCancellationEmail(String userEmail, Cita cita) {
+        new Thread(() -> {
+            try {
+                // Configuración de propiedades para Gmail SMTP
+                Properties props = new Properties();
+                props.put("mail.smtp.auth", "true");
+                props.put("mail.smtp.starttls.enable", "true");
+                props.put("mail.smtp.host", "smtp.gmail.com");
+                props.put("mail.smtp.port", "587");
+                final String username = "contactmolisnail@gmail.com";
+                final String password = "dxpc knnr rncc otnb";
+                Session session = Session.getInstance(props, new javax.mail.Authenticator() {
+                    protected PasswordAuthentication getPasswordAuthentication() {
+                        return new PasswordAuthentication(username, password);
+                    }
+                });
+                Message message = new MimeMessage(session);
+                message.setFrom(new InternetAddress("contactmolisnail@gmail.com"));
+                message.setRecipients(
+                        Message.RecipientType.TO,
+                        InternetAddress.parse("contactmolisnail@gmail.com")
+                );
+                message.setSubject("Cancelación de cita");
+                message.setText("El usuario " + userEmail + " ha cancelado la cita del día " + cita.getFecha() +
+                        " a las " + cita.getHora() + ".\n\n" +
+                        "El servicio de la cita era: " + cita.getServicio() + ".\n\n" +
+                        "La cita vuelve a estar disponible para su adquisición.");
+                Transport.send(message);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }).start();
+    }
+
 
     private int getPuntosPorServicio(String servicio) {
         switch (servicio) {

@@ -18,6 +18,14 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Properties;
+
+import javax.mail.Message;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 
 public class ViewUserAppointmentsActivity extends AppCompatActivity {
 
@@ -84,12 +92,68 @@ public class ViewUserAppointmentsActivity extends AppCompatActivity {
     }
 
     private void deleteFutureAppointment(Appointment appointment) {
+        String userId = getIntent().getStringExtra("userId");
+        if (userId == null || userId.isEmpty()) {
+            Log.e("ViewAppointments", "No se pudo obtener el userId");
+            return;
+        }
+
         db.collection("citas").document(appointment.getId())
                 .delete()
                 .addOnSuccessListener(aVoid -> {
                     futureAppointments.remove(appointment);
                     adapter.notifyDataSetChanged();
+                    db.collection("usuarios").document(userId).get()
+                            .addOnSuccessListener(documentSnapshot -> {
+                                String userEmail = documentSnapshot.getString("email");
+                                if (userEmail != null && !userEmail.isEmpty()) {
+                                    sendCancellationEmailToUser(appointment, userEmail);
+                                } else {
+                                    Log.e("ViewAppointments", "El usuario no tiene un correo registrado");
+                                }
+                            })
+                            .addOnFailureListener(e -> Log.e("ViewAppointments", "Error al obtener usuario", e));
                 })
                 .addOnFailureListener(e -> Log.e("ViewAppointments", "Error al eliminar cita", e));
     }
+
+    private void sendCancellationEmailToUser(Appointment appointment, String userEmail) {
+        new Thread(() -> {
+            try {
+                // Configuración de propiedades para Gmail SMTP
+                Properties props = new Properties();
+                props.put("mail.smtp.auth", "true");
+                props.put("mail.smtp.starttls.enable", "true");
+                props.put("mail.smtp.host", "smtp.gmail.com");
+                props.put("mail.smtp.port", "587");
+                final String username = "contactmolisnail@gmail.com";
+                final String password = "dxpc knnr rncc otnb";
+                Session session = Session.getInstance(props, new javax.mail.Authenticator() {
+                    protected PasswordAuthentication getPasswordAuthentication() {
+                        return new PasswordAuthentication(username, password);
+                    }
+                });
+                Message message = new MimeMessage(session);
+                message.setFrom(new InternetAddress("contactmolisnail@gmail.com"));
+                message.setRecipients(
+                        Message.RecipientType.TO,
+                        InternetAddress.parse(userEmail)
+                );
+                message.setSubject("Cancelación de cita");
+                message.setText("Estimado cliente,\n\n" +
+                        "Su cita del día " + appointment.getFecha() + " a las " + appointment.getHora() + " ha sido eliminada por motivos empresariales.\n\n" +
+                        "El servicio de la cita era: " + appointment.getServicio() + ".\n\n" +
+                        "Desde Moli´s Nail queremos pedirle disculpas por los inconvenientes generados y le invitamos a adquirir una cita un día futuro.\n\n" +
+                        "Disculpe las molestias.\n\n" +
+                        "Atentamente,\n" +
+                        "El equipo de Moli´s Nail");
+                Transport.send(message);
+                Log.i("Email", "Correo enviado exitosamente a " + userEmail);
+            } catch (Exception e) {
+                Log.e("EmailError", "Error al enviar el correo", e);
+            }
+        }).start();
+    }
+
+
 }

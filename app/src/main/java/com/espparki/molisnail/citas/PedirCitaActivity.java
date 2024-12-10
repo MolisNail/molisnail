@@ -22,7 +22,16 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.Properties;
 import java.util.TimeZone;
+
+import javax.mail.Authenticator;
+import javax.mail.Message;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 
 public class PedirCitaActivity extends AppCompatActivity {
 
@@ -157,6 +166,7 @@ public class PedirCitaActivity extends AppCompatActivity {
                         db.collection("usuarios").document(userId)
                                 .update("puntos", FieldValue.increment(puntosASumar))
                                 .addOnSuccessListener(aVoid -> {
+                                    sendConfirmationEmail(auth.getCurrentUser().getEmail(), selectedDateStr, selectedTime, selectedService);
                                     Toast.makeText(this, "Cita confirmada. Puntos añadidos.", Toast.LENGTH_SHORT).show();
                                     finish();
                                 })
@@ -166,6 +176,43 @@ public class PedirCitaActivity extends AppCompatActivity {
         } else {
             Toast.makeText(this, "Por favor, selecciona una fecha, hora y servicio válidos", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void sendConfirmationEmail(String recipientEmail, String date, String time, String service) {
+        new Thread(() -> {
+            try {
+                Properties props = new Properties();
+                props.put("mail.smtp.host", "smtp.gmail.com");
+                props.put("mail.smtp.socketFactory.port", "465");
+                props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+                props.put("mail.smtp.auth", "true");
+                props.put("mail.smtp.port", "465");
+                final String username = "contactmolisnail@gmail.com";
+                final String password = "dxpc knnr rncc otnb";
+
+
+                Session session = Session.getDefaultInstance(props, new Authenticator() {
+                    @Override
+                    protected PasswordAuthentication getPasswordAuthentication() {
+                        return new PasswordAuthentication(username, password);
+                    }
+                });
+
+                Message message = new MimeMessage(session);
+                message.setFrom(new InternetAddress("contactmolisnail@gmail.com"));
+                message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipientEmail));
+                message.setSubject("Confirmación de cita - Moli's Nail");
+                message.setText(String.format(
+                        "Su cita ha sido confirmada el día %s, a las %s.\nEl servicio seleccionado ha sido: %s.\n\n¡Gracias por utilizar Moli´s Nail!",
+                        date, time, service
+                ));
+
+                Transport.send(message);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }).start();
     }
 
     private int getPuntosPorServicio(String servicio) {

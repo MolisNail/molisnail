@@ -31,6 +31,18 @@
         <activity android:name=".perfil.ConfigurationActivity"/>
         <activity android:name=".perfil.ReviewActivity"/>
         <activity android:name=".tienda.StoreActivity"/>
+        <activity android:name=".tienda.PaymentWebViewActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                    android:scheme="myapp"
+                    android:host="paypal-callback" />
+            </intent-filter>
+        </activity>
+
         <activity android:name=".citas.PedirCitaActivity" />
         <activity
             android:name=".tienda.CartActivity"
@@ -40,6 +52,8 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data android:scheme="com.espparki.molisnail" android:host="paypalpay" />
+                <data android:scheme="com.espparki.molisnail" android:host="paypal" android:path="/success" />
+                <data android:scheme="com.espparki.molisnail" android:host="paypal" android:path="/cancel" />
             </intent-filter>
         </activity>
         <activity android:name=".tienda.PaymentResultActivity" />

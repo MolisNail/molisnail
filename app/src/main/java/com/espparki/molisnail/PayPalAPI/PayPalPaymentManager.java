@@ -1,13 +1,19 @@
 package com.espparki.molisnail.PayPalAPI;
 
-import java.io.IOException;
+import android.content.Context;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class PayPalPaymentManager {
-    public static void createPayment(String amount, String currency, PayPalPaymentCallback callback) {
+    private Context context;
+
+    public PayPalPaymentManager(Context context) {
+        this.context = context;
+    }
+
+    public void createPayment(String amount, String currency, PayPalPaymentCallback callback) {
         String formattedAmount = amount.replace(",", ".");
         PayPalTokenManager.getAccessToken(new PayPalTokenManager.PayPalTokenCallback() {
             @Override
@@ -15,29 +21,33 @@ public class PayPalPaymentManager {
                 PayPalApi api = PayPalService.getRetrofitInstance().create(PayPalApi.class);
                 PaymentRequest request = new PaymentRequest(
                         "CAPTURE",
-                        new PurchaseUnit[]{new PurchaseUnit(new Amount(currency, formattedAmount), "Productos")}
+                        new PurchaseUnit[]{new PurchaseUnit(new Amount(currency, formattedAmount), "Compra de ejemplo")}
                 );
 
-                Call<PaymentResponse> call = api.createPayment(token, request);
-
-                call.enqueue(new Callback<PaymentResponse>() {
+                api.createPayment(token, request).enqueue(new Callback<PaymentResponse>() {
                     @Override
                     public void onResponse(Call<PaymentResponse> call, Response<PaymentResponse> response) {
                         if (response.isSuccessful() && response.body() != null) {
-                            callback.onPaymentSuccess(response.body().id);
-                        } else {
-                            try {
-                                String errorBody = response.errorBody() != null ? response.errorBody().string() : "No error body";
-                                callback.onPaymentError(new Exception("Error en la respuesta del servidor: " + response.code() + ", " + errorBody));
-                            } catch (IOException e) {
-                                callback.onPaymentError(new Exception("Error al leer el cuerpo de la respuesta: " + e.getMessage()));
+                            PaymentResponse paymentResponse = response.body();
+                            String approveUrl = paymentResponse.getLinks().stream()
+                                    .filter(link -> "approve".equals(link.getRel()))
+                                    .map(PaymentResponse.Link::getHref)
+                                    .findFirst()
+                                    .orElse(null);
+
+                            if (approveUrl != null) {
+                                callback.onPaymentRedirect(approveUrl);
+                            } else {
+                                callback.onPaymentError(new Exception("No se encontró el enlace de aprobación."));
                             }
+                        } else {
+                            callback.onPaymentError(new Exception("Error en la respuesta del servidor: " + response.code()));
                         }
                     }
 
                     @Override
                     public void onFailure(Call<PaymentResponse> call, Throwable t) {
-                        callback.onPaymentError(new Exception(t));
+                        callback.onPaymentError(new Exception("Error de red: " + t.getMessage()));
                     }
                 });
             }
@@ -53,5 +63,7 @@ public class PayPalPaymentManager {
         void onPaymentSuccess(String paymentId);
 
         void onPaymentError(Exception e);
+
+        void onPaymentRedirect(String approveUrl);
     }
 }
